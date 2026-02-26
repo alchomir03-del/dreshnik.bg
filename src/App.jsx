@@ -328,6 +328,7 @@ function Nav({ tab, setTab, count }) {
     <div style={{
       background: C.bg, borderBottom: "1px solid " + C.border,
       position: "sticky", top: 0, zIndex: 100,
+      paddingTop: "env(safe-area-inset-top, 0px)",
     }}>
       <div style={{ padding: "18px 22px 0" }}>
         <div style={{
@@ -841,12 +842,19 @@ function AddTab({ onAdd, lastCat }) {
   const startCam = async () => {
     try {
       const s = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment", width: { ideal: 1280 } }
+        video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 960 } },
+        audio: false
       });
       strRef.current = s;
-      if (vidRef.current) vidRef.current.srcObject = s;
       setCam(true); setErr(null);
-    } catch { setErr("Camera unavailable."); }
+      setTimeout(() => {
+        if (vidRef.current) {
+          vidRef.current.srcObject = s;
+          vidRef.current.setAttribute("playsinline", "");
+          vidRef.current.play().catch(() => {});
+        }
+      }, 100);
+    } catch { setErr("Camera unavailable. Check permissions in Settings > Safari."); }
   };
 
   const stopCam = () => {
@@ -931,7 +939,9 @@ function AddTab({ onAdd, lastCat }) {
         )}
         {cam ? (
           <div style={{ borderRadius: 3, overflow: "hidden" }}>
-            <video ref={vidRef} autoPlay playsInline style={{ width: "100%", background: "#000" }} />
+            <video ref={vidRef} autoPlay playsInline muted
+              onLoadedMetadata={(e) => e.target.play().catch(() => {})}
+              style={{ width: "100%", display: "block", background: "#000" }} />
             <div style={{
               display: "flex", gap: 16, justifyContent: "center",
               padding: "22px 0", background: C.bg,
@@ -1649,7 +1659,7 @@ function Onboarding({ onComplete }) {
 
   return (
     <div style={{
-      height: "100vh", background: C.bg,
+      height: "100vh", height: "100dvh", background: C.bg,
       display: "flex", flexDirection: "column", justifyContent: "center",
       padding: "0 32px",
     }}>
@@ -1736,15 +1746,17 @@ export default function App() {
     @keyframes pulse { 0%, 100% { opacity: 1 } 50% { opacity: 0.35 } }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent }
     ::-webkit-scrollbar { display: none }
-    body { background: #080808; margin: 0 }
+    html { height: -webkit-fill-available }
+    body { background: #080808; margin: 0; min-height: 100vh; min-height: 100dvh; min-height: -webkit-fill-available; padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0) }
     input, select, button { outline: none }
     input:focus { border-color: #333 !important }
     ::placeholder { color: #282828 }
+    video { -webkit-transform: translateZ(0) }
   `;
 
   if (!loaded) {
     return (
-      <div style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: C.bg }}>
+      <div style={{ height: "100vh", height: "100dvh", display: "flex", alignItems: "center", justifyContent: "center", background: C.bg }}>
         <style>{globalStyles}</style>
         <Logo size={28} animate />
       </div>
@@ -1761,7 +1773,7 @@ export default function App() {
   }
 
   return (
-    <div style={{ maxWidth: 500, margin: "0 auto", minHeight: "100vh", background: C.bg }}>
+    <div style={{ maxWidth: 500, margin: "0 auto", minHeight: "100vh", minHeight: "100dvh", background: C.bg, paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>
       <style>{globalStyles}</style>
       <Nav tab={tab} setTab={setTab} count={items.length} />
       {tab === "wardrobe" && <WardrobeTab items={items} onDelete={del} onUpdate={update} weather={weather} />}
