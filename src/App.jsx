@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback, createContext, useContext } from "react";
+import { useAuth } from "./AuthContext.jsx";
 
 // ============================================================
 // dreshnik.ai v6 — Full Feature Digital Wardrobe
@@ -110,7 +111,7 @@ function WeatherBar({weather}){const T=useTheme();if(!weather)return null;return
 
 function Nav({tab,setTab,count,theme,toggleTheme}){
   const T=useTheme();
-  const tabs=[{id:"wardrobe",label:"Wardrobe"},{id:"add",label:"Add"},{id:"outfits",label:"Style"},{id:"saved",label:"Saved"},{id:"insights",label:"Insights"}];
+  const tabs=[{id:"wardrobe",label:"Wardrobe"},{id:"add",label:"+"},{id:"outfits",label:"Style"},{id:"saved",label:"Saved"},{id:"insights",label:"Insights"},{id:"profile",label:"Profile"}];
   return(<div style={{background:T.bg,borderBottom:"1px solid "+T.border,position:"sticky",top:0,zIndex:100,paddingTop:"env(safe-area-inset-top, 0px)"}}>
     <div style={{padding:"18px 22px 0"}}><div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:18}}>
       <Logo size={28}/>
@@ -371,15 +372,160 @@ function Onboarding({onComplete}){
   </div>);
 }
 
+// ============================================================
+// Auth Screens
+// ============================================================
+function AuthScreen(){
+  const T=useTheme();const{loginEmail,registerEmail,loginGoogle,resetPassword,error,setError}=useAuth();
+  const[mode,setMode]=useState("login");const[email,setEmail]=useState("");const[pass,setPass]=useState("");const[name,setName]=useState("");const[busy,setBusy]=useState(false);const[resetSent,setResetSent]=useState(false);
+  const inputSt={width:"100%",padding:"14px 16px",borderRadius:3,border:"1px solid "+T.border,fontSize:14,fontFamily:F.sans,color:T.text,background:T.surface,boxSizing:"border-box",marginBottom:12};
+  const submit=async()=>{setBusy(true);setError(null);try{if(mode==="register")await registerEmail(email,pass,name);else if(mode==="reset"){await resetPassword(email);setResetSent(true);}else await loginEmail(email,pass);}catch{}finally{setBusy(false);}};
+  return(<div style={{minHeight:"100vh",minHeight:"100dvh",background:T.bg,display:"flex",flexDirection:"column",justifyContent:"center",padding:"0 28px"}}>
+    <div style={{marginBottom:44}}><Logo size={32}/><p style={{fontFamily:F.sans,fontSize:14,color:T.textMuted,margin:"8px 0 0"}}>{mode==="login"?"Welcome back":mode==="register"?"Create your wardrobe":"Reset password"}</p></div>
+    {error&&<div style={{padding:"12px 16px",borderRadius:3,border:"1px solid "+T.dangerBorder,marginBottom:16,fontFamily:F.sans,fontSize:12,color:T.dangerText}}>{error}</div>}
+    {resetSent&&<div style={{padding:"12px 16px",borderRadius:3,border:"1px solid "+T.border,marginBottom:16,fontFamily:F.sans,fontSize:12,color:T.textSoft}}>Password reset email sent. Check your inbox.</div>}
+    {mode==="register"&&<input value={name} onChange={e=>setName(e.target.value)} placeholder="Your name" style={inputSt}/>}
+    {mode!=="reset"||!resetSent?<>
+      <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email" type="email" autoComplete="email" style={inputSt}/>
+      {mode!=="reset"&&<input value={pass} onChange={e=>setPass(e.target.value)} placeholder="Password" type="password" autoComplete={mode==="register"?"new-password":"current-password"} style={inputSt}/>}
+      <button onClick={submit} disabled={busy||!email||(mode!=="reset"&&!pass)} style={{width:"100%",padding:15,borderRadius:3,border:"none",background:T.text,color:T.bg,fontFamily:F.sans,fontSize:12,fontWeight:600,cursor:"pointer",letterSpacing:"0.1em",textTransform:"uppercase",opacity:busy?0.5:1,marginBottom:12}}>{busy?"...":(mode==="login"?"Sign in":mode==="register"?"Create account":"Send reset link")}</button>
+    </>:null}
+    {mode!=="reset"&&<><div style={{display:"flex",alignItems:"center",gap:14,margin:"8px 0 20px"}}><div style={{flex:1,height:1,background:T.border}}/><span style={{fontFamily:F.mono,fontSize:8,color:T.textDim}}>OR</span><div style={{flex:1,height:1,background:T.border}}/></div>
+    <button onClick={async()=>{setBusy(true);try{await loginGoogle();}catch{}finally{setBusy(false);}}} style={{width:"100%",padding:14,borderRadius:3,border:"1px solid "+T.border,background:"transparent",fontFamily:F.sans,fontSize:12,fontWeight:500,color:T.text,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:10,marginBottom:16}}>
+      <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+      Continue with Google
+    </button></>}
+    <div style={{display:"flex",justifyContent:"center",gap:16,marginTop:8}}>
+      {mode==="login"&&<><button onClick={()=>{setMode("register");setError(null);}} style={{background:"none",border:"none",color:T.textMuted,fontFamily:F.mono,fontSize:9,cursor:"pointer",letterSpacing:"0.06em"}}>CREATE ACCOUNT</button><button onClick={()=>{setMode("reset");setError(null);}} style={{background:"none",border:"none",color:T.textDim,fontFamily:F.mono,fontSize:9,cursor:"pointer",letterSpacing:"0.06em"}}>FORGOT PASSWORD</button></>}
+      {mode!=="login"&&<button onClick={()=>{setMode("login");setError(null);setResetSent(false);}} style={{background:"none",border:"none",color:T.textMuted,fontFamily:F.mono,fontSize:9,cursor:"pointer",letterSpacing:"0.06em"}}>BACK TO LOGIN</button>}
+    </div>
+  </div>);
+}
+
+// ============================================================
+// Profile & Settings Tab
+// ============================================================
+function ProfileTab(){
+  const T=useTheme();const{user,profile,settings,saveProfile,saveSettings,uploadPhoto,logout,deleteAccount,exportData}=useAuth();
+  const[editName,setEditName]=useState(false);const[nameVal,setNameVal]=useState(profile.displayName);
+  const[editBio,setEditBio]=useState(false);const[bioVal,setBioVal]=useState(profile.bio||"");
+  const[showDelete,setShowDelete]=useState(false);const[delPass,setDelPass]=useState("");const[busy,setBusy]=useState(false);
+  const fileRef=useRef(null);
+  const labelSt={fontFamily:F.mono,fontSize:8,color:T.textDim,letterSpacing:"0.12em",display:"block",marginBottom:6,textTransform:"uppercase"};
+  const inputSt={width:"100%",padding:"12px 16px",borderRadius:2,border:"1px solid "+T.border,fontSize:13,fontFamily:F.sans,color:T.text,background:T.surface,boxSizing:"border-box"};
+  const Section=({title,children})=>(<div style={{background:T.card,border:"1px solid "+T.border,borderRadius:3,padding:18,marginBottom:14,boxShadow:T.cardShadow}}><p style={{fontFamily:F.mono,fontSize:8,color:T.textDim,letterSpacing:"0.12em",margin:"0 0 14px"}}>{title}</p>{children}</div>);
+  const Row=({label,value,onClick})=>(<div onClick={onClick} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"12px 0",borderBottom:"1px solid "+T.border,cursor:onClick?"pointer":"default"}}><span style={{fontFamily:F.sans,fontSize:12,color:T.text}}>{label}</span><span style={{fontFamily:F.mono,fontSize:11,color:T.textMuted}}>{value||"\u2014"} {onClick?"\u203A":""}</span></div>);
+  const Toggle=({label,value,onChange})=>(<div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"12px 0",borderBottom:"1px solid "+T.border}}><span style={{fontFamily:F.sans,fontSize:12,color:T.text}}>{label}</span><button onClick={()=>onChange(!value)} style={{width:44,height:24,borderRadius:12,border:"none",background:value?T.text:T.border,cursor:"pointer",position:"relative",transition:"all 0.2s"}}><div style={{width:18,height:18,borderRadius:9,background:value?T.bg:T.textDim,position:"absolute",top:3,left:value?23:3,transition:"all 0.2s"}}/></button></div>);
+  const handlePhoto=async(e)=>{const f=e.target.files?.[0];if(!f)return;setBusy(true);try{await uploadPhoto(f);}catch{}finally{setBusy(false);}};
+  const handleExport=async()=>{const data=await exportData();if(!data)return;const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="dreshnik-export-"+new Date().toISOString().slice(0,10)+".json";a.click();URL.revokeObjectURL(url);};
+  const handleDelete=async()=>{setBusy(true);try{await deleteAccount(delPass);}catch{}finally{setBusy(false);}};
+  const isGoogle=user?.providerData?.[0]?.providerId==="google.com";
+  return(<div style={{padding:"24px 20px 100px"}}>
+    {/* Profile header */}
+    <div style={{display:"flex",alignItems:"center",gap:18,marginBottom:28}}>
+      <div onClick={()=>fileRef.current?.click()} style={{width:72,height:72,borderRadius:"50%",overflow:"hidden",border:"2px solid "+T.border,cursor:"pointer",flexShrink:0,background:T.surface,display:"flex",alignItems:"center",justifyContent:"center"}}>
+        {profile.photoURL||user?.photoURL?<img src={profile.photoURL||user?.photoURL} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>:<span style={{fontFamily:F.serif,fontSize:28,color:T.textDim}}>{(profile.displayName||user?.displayName||"?")[0]?.toUpperCase()}</span>}
+      </div>
+      <input ref={fileRef} type="file" accept="image/*" onChange={handlePhoto} style={{display:"none"}}/>
+      <div style={{flex:1}}>
+        {editName?<div style={{display:"flex",gap:6}}><input value={nameVal} onChange={e=>setNameVal(e.target.value)} style={{...inputSt,flex:1,marginBottom:0}} autoFocus/><button onClick={()=>{saveProfile({displayName:nameVal});setEditName(false);}} style={{padding:"0 14px",borderRadius:2,border:"1px solid "+T.text,background:"transparent",color:T.text,fontFamily:F.mono,fontSize:9,cursor:"pointer"}}>SAVE</button></div>:
+        <p onClick={()=>setEditName(true)} style={{fontFamily:F.serif,fontSize:22,color:T.text,fontWeight:400,margin:0,cursor:"pointer"}}>{profile.displayName||user?.displayName||"Set name"}</p>}
+        <p style={{fontFamily:F.mono,fontSize:10,color:T.textDim,margin:"4px 0 0"}}>{user?.email}</p>
+        {isGoogle&&<span style={{fontFamily:F.mono,fontSize:8,color:T.textDim,border:"1px solid "+T.border,padding:"2px 8px",borderRadius:2,marginTop:4,display:"inline-block"}}>GOOGLE</span>}
+      </div>
+    </div>
+    {/* Bio */}
+    <Section title="BIO">
+      {editBio?<div><textarea value={bioVal} onChange={e=>setBioVal(e.target.value)} rows={3} style={{...inputSt,resize:"none",marginBottom:8}} placeholder="Tell us about your style..."/><button onClick={()=>{saveProfile({bio:bioVal});setEditBio(false);}} style={{padding:"8px 16px",borderRadius:2,border:"1px solid "+T.text,background:"transparent",color:T.text,fontFamily:F.mono,fontSize:9,cursor:"pointer"}}>SAVE</button></div>:
+      <p onClick={()=>setEditBio(true)} style={{fontFamily:F.sans,fontSize:12,color:profile.bio?T.textSoft:T.textDim,margin:0,cursor:"pointer",lineHeight:1.6}}>{profile.bio||"Tap to add a bio..."}</p>}
+    </Section>
+    {/* Style preferences */}
+    <Section title="STYLE PREFERENCES">
+      <label style={labelSt}>PREFERRED STYLES</label>
+      <div style={{display:"flex",flexWrap:"wrap",gap:5,marginBottom:14}}>{STYLES.map((s,i)=>{const id=STYLE_IDS[i];const active=profile.preferredStyles?.includes(id);return<Pill key={i} active={active} onClick={()=>{const cur=profile.preferredStyles||[];saveProfile({preferredStyles:active?cur.filter(x=>x!==id):[...cur,id]});}} small>{s}</Pill>})}</div>
+      <Row label="Body type" value={profile.bodyType}/>
+      <Row label="Top size" value={profile.topSize}/>
+      <Row label="Bottom size" value={profile.bottomSize}/>
+      <Row label="Shoe size" value={profile.shoeSize}/>
+    </Section>
+    {/* Settings */}
+    <Section title="PREFERENCES">
+      <Toggle label="Seasonal rotation" value={settings.seasonalRotation} onChange={v=>saveSettings({seasonalRotation:v})}/>
+      <Toggle label="Morning outfit reminder" value={settings.notifyMorningOutfit} onChange={v=>saveSettings({notifyMorningOutfit:v})}/>
+      <Toggle label="Weekly style report" value={settings.notifyWeeklyReport} onChange={v=>saveSettings({notifyWeeklyReport:v})}/>
+      <Toggle label="Laundry reminder" value={settings.notifyLaundryReminder} onChange={v=>saveSettings({notifyLaundryReminder:v})}/>
+      <Toggle label="Public wardrobe" value={profile.isPublic} onChange={v=>saveProfile({isPublic:v})}/>
+      <div style={{padding:"12px 0",borderBottom:"1px solid "+T.border}}>
+        <label style={{...labelSt,marginBottom:8}}>CURRENCY</label>
+        <div style={{display:"flex",gap:6}}>{["\u043B\u0432","\u20AC","$","\u00A3"].map(c=><Pill key={c} active={settings.currency===c} onClick={()=>saveSettings({currency:c})} small>{c}</Pill>)}</div>
+      </div>
+      <div style={{padding:"12px 0"}}>
+        <label style={{...labelSt,marginBottom:8}}>LANGUAGE</label>
+        <div style={{display:"flex",gap:6}}>{[{id:"bg",l:"\u0411\u0413"},{id:"en",l:"EN"}].map(lng=><Pill key={lng.id} active={settings.language===lng.id} onClick={()=>saveSettings({language:lng.id})} small>{lng.l}</Pill>)}</div>
+      </div>
+    </Section>
+    {/* Account actions */}
+    <Section title="ACCOUNT">
+      <button onClick={handleExport} style={{width:"100%",padding:13,borderRadius:2,border:"1px solid "+T.border,background:"transparent",fontFamily:F.mono,fontSize:9,color:T.textMuted,cursor:"pointer",letterSpacing:"0.06em",marginBottom:8}}>EXPORT DATA (JSON)</button>
+      <button onClick={logout} style={{width:"100%",padding:13,borderRadius:2,border:"1px solid "+T.border,background:"transparent",fontFamily:F.mono,fontSize:9,color:T.textMuted,cursor:"pointer",letterSpacing:"0.06em",marginBottom:8}}>SIGN OUT</button>
+      {!showDelete?<button onClick={()=>setShowDelete(true)} style={{width:"100%",padding:13,borderRadius:2,border:"1px solid "+T.dangerBorder,background:"transparent",fontFamily:F.mono,fontSize:9,color:T.dangerText,cursor:"pointer",letterSpacing:"0.06em"}}>DELETE ACCOUNT</button>:
+      <div style={{border:"1px solid "+T.dangerBorder,borderRadius:3,padding:16}}>
+        <p style={{fontFamily:F.sans,fontSize:12,color:T.dangerText,margin:"0 0 12px"}}>This will permanently delete your account and all data.</p>
+        {!isGoogle&&<input value={delPass} onChange={e=>setDelPass(e.target.value)} type="password" placeholder="Enter password to confirm" style={{...inputSt,marginBottom:10}}/>}
+        <div style={{display:"flex",gap:8}}><button onClick={()=>{setShowDelete(false);setDelPass("");}} style={{flex:1,padding:12,borderRadius:2,border:"1px solid "+T.border,background:"transparent",fontFamily:F.mono,fontSize:9,color:T.textMuted,cursor:"pointer"}}>CANCEL</button>
+        <button onClick={handleDelete} disabled={!isGoogle&&!delPass} style={{flex:1,padding:12,borderRadius:2,border:"none",background:T.dangerText,color:"#fff",fontFamily:F.mono,fontSize:9,cursor:"pointer",opacity:busy?0.5:1}}>DELETE</button></div>
+      </div>}
+    </Section>
+    <p style={{fontFamily:F.mono,fontSize:8,color:T.textDim,textAlign:"center",letterSpacing:"0.08em",marginTop:20}}>DRESHNIK.AI v7 \u00B7 MADE IN BULGARIA</p>
+  </div>);
+}
+
+// ============================================================
+// App (v7 with Auth + Cloud Sync)
+// ============================================================
 export default function App(){
+  const{user,loading:authLoading,profile,settings,saveSettings,syncItems,loadItems,syncOutfits,loadOutfits,syncMeta,loadMeta}=useAuth();
   const[tab,setTab]=useState("wardrobe");const[items,setItems]=useState([]);const[saved,setSaved]=useState([]);const[loaded,setLoaded]=useState(false);const[onboarded,setOnboarded]=useState(false);const[lastCat,setLastCat]=useState("");const[theme,setTheme]=useState("dark");const[calendar,setCalendar]=useState({});const[blacklist,setBlacklist]=useState([]);const[hideSeasonal,setHideSeasonal]=useState(false);const weather=useWeather();
-  useEffect(()=>{(async()=>{const i=await sGet("d6-items");const o=await sGet("d6-outfits");const ob=await sGet("d6-onboarded");const th=await sGet("d6-theme");const cal=await sGet("d6-calendar");const bl=await sGet("d6-blacklist");const hs=await sGet("d6-seasonal");if(i)setItems(i);if(o)setSaved(o);if(ob)setOnboarded(true);if(th)setTheme(th);if(cal)setCalendar(cal);if(bl)setBlacklist(bl);if(hs)setHideSeasonal(hs);setLoaded(true);})();},[]);
-  useEffect(()=>{if(loaded)sSet("d6-items",items);},[items,loaded]);
-  useEffect(()=>{if(loaded)sSet("d6-outfits",saved);},[saved,loaded]);
-  useEffect(()=>{if(loaded)sSet("d6-calendar",calendar);},[calendar,loaded]);
-  useEffect(()=>{if(loaded)sSet("d6-blacklist",blacklist);},[blacklist,loaded]);
-  useEffect(()=>{if(loaded)sSet("d6-seasonal",hideSeasonal);},[hideSeasonal,loaded]);
-  const toggleTheme=()=>{const next=theme==="dark"?"light":"dark";setTheme(next);sSet("d6-theme",next);};
+  const syncTimer=useRef(null);
+
+  // Load data: from cloud if logged in, else localStorage
+  useEffect(()=>{if(authLoading)return;(async()=>{
+    if(user){
+      // Cloud load
+      const ci=await loadItems();const co=await loadOutfits();const cm=await loadMeta();
+      if(ci)setItems(ci);if(co)setSaved(co);
+      if(cm){if(cm.calendar)setCalendar(cm.calendar);if(cm.blacklist)setBlacklist(cm.blacklist);}
+      if(settings.theme)setTheme(settings.theme);
+      if(settings.seasonalRotation!==undefined)setHideSeasonal(settings.seasonalRotation);
+      setOnboarded(true);
+      // Migrate localStorage data to cloud if exists
+      const localItems=await sGet("d6-items");
+      if(localItems&&localItems.length>0&&(!ci||ci.length===0)){
+        setItems(localItems);await syncItems(localItems);
+        const localO=await sGet("d6-outfits");if(localO){setSaved(localO);await syncOutfits(localO);}
+        const localCal=await sGet("d6-calendar");const localBl=await sGet("d6-blacklist");
+        if(localCal||localBl)await syncMeta({calendar:localCal||{},blacklist:localBl||[]});
+        if(localCal)setCalendar(localCal);if(localBl)setBlacklist(localBl);
+        // Clear localStorage after migration
+        localStorage.removeItem("d6-items");localStorage.removeItem("d6-outfits");localStorage.removeItem("d6-calendar");localStorage.removeItem("d6-blacklist");
+      }
+    }else{
+      // Local-only mode (no auth)
+      const i=await sGet("d6-items");const o=await sGet("d6-outfits");const ob=await sGet("d6-onboarded");const th=await sGet("d6-theme");const cal=await sGet("d6-calendar");const bl=await sGet("d6-blacklist");const hs=await sGet("d6-seasonal");
+      if(i)setItems(i);if(o)setSaved(o);if(ob)setOnboarded(true);if(th)setTheme(th);if(cal)setCalendar(cal);if(bl)setBlacklist(bl);if(hs)setHideSeasonal(hs);
+    }
+    setLoaded(true);
+  })();},[authLoading,user]);
+
+  // Debounced cloud sync
+  const debouncedSync=useCallback((fn)=>{if(syncTimer.current)clearTimeout(syncTimer.current);syncTimer.current=setTimeout(fn,2000);},[]);
+
+  useEffect(()=>{if(!loaded)return;if(user){debouncedSync(()=>syncItems(items));}else{sSet("d6-items",items);}},[items,loaded]);
+  useEffect(()=>{if(!loaded)return;if(user){debouncedSync(()=>syncOutfits(saved));}else{sSet("d6-outfits",saved);}},[saved,loaded]);
+  useEffect(()=>{if(!loaded)return;if(user){debouncedSync(()=>syncMeta({calendar,blacklist}));}else{sSet("d6-calendar",calendar);sSet("d6-blacklist",blacklist);}},[calendar,blacklist,loaded]);
+  useEffect(()=>{if(!loaded)return;if(!user){sSet("d6-seasonal",hideSeasonal);}},[hideSeasonal,loaded]);
+
+  const toggleTheme=()=>{const next=theme==="dark"?"light":"dark";setTheme(next);if(user)saveSettings({theme:next});else sSet("d6-theme",next);};
   const add=(item)=>{setItems(p=>[item,...p]);setLastCat(item.category);setTab("wardrobe");};
   const del=(id)=>setItems(p=>p.filter(i=>i.id!==id));
   const update=(id,upd)=>{setItems(p=>p.map(i=>i.id===id?{...i,...upd}:i));if(upd.lastWorn){const dk=todayKey();setCalendar(prev=>{const existing=prev[dk]||[];if(!existing.includes(id))return{...prev,[dk]:[...existing,id]};return prev;});}};
@@ -387,9 +533,18 @@ export default function App(){
   const completeOnb=()=>{setOnboarded(true);sSet("d6-onboarded",true);};
   const addBlacklist=(key)=>setBlacklist(p=>[...p,key]);
   const T=THEMES[theme]||THEMES.dark;
-  const globalStyles=`@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Syne:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap');@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}::-webkit-scrollbar{display:none}html{height:-webkit-fill-available}body{background:${T.bg};margin:0;min-height:100vh;min-height:100dvh;min-height:-webkit-fill-available;padding:env(safe-area-inset-top,0) env(safe-area-inset-right,0) env(safe-area-inset-bottom,0) env(safe-area-inset-left,0);transition:background 0.3s}input,select,button{outline:none}input:focus{border-color:${theme==="dark"?"#333":"#AAA"} !important}::placeholder{color:${T.textDim}}video{-webkit-transform:translateZ(0)}`;
-  if(!loaded)return(<ThemeCtx.Provider value={T}><div style={{height:"100vh",height:"100dvh",display:"flex",alignItems:"center",justifyContent:"center",background:T.bg}}><style>{globalStyles}</style><Logo size={28} animate/></div></ThemeCtx.Provider>);
-  if(!onboarded)return(<ThemeCtx.Provider value={T}><style>{globalStyles}</style><Onboarding onComplete={completeOnb}/></ThemeCtx.Provider>);
+  const globalStyles=`@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Syne:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap');@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}::-webkit-scrollbar{display:none}html{height:-webkit-fill-available}body{background:${T.bg};margin:0;min-height:100vh;min-height:100dvh;min-height:-webkit-fill-available;padding:env(safe-area-inset-top,0) env(safe-area-inset-right,0) env(safe-area-inset-bottom,0) env(safe-area-inset-left,0);transition:background 0.3s}input,select,button,textarea{outline:none}input:focus,textarea:focus{border-color:${theme==="dark"?"#333":"#AAA"} !important}::placeholder{color:${T.textDim}}video{-webkit-transform:translateZ(0)}`;
+
+  // Loading
+  if(authLoading||!loaded)return(<ThemeCtx.Provider value={T}><div style={{height:"100vh",height:"100dvh",display:"flex",alignItems:"center",justifyContent:"center",background:T.bg}}><style>{globalStyles}</style><Logo size={28} animate/></div></ThemeCtx.Provider>);
+  // Auth screen
+  if(!user)return(<ThemeCtx.Provider value={T}><style>{globalStyles}</style><AuthScreen/></ThemeCtx.Provider>);
+  // Onboarding (only for non-auth legacy, users with auth skip this)
+  if(!onboarded&&!user)return(<ThemeCtx.Provider value={T}><style>{globalStyles}</style><Onboarding onComplete={completeOnb}/></ThemeCtx.Provider>);
+
+  // Nav tabs - add Profile
+  const tabs=[{id:"wardrobe",label:"Wardrobe"},{id:"add",label:"Add"},{id:"outfits",label:"Style"},{id:"saved",label:"Saved"},{id:"insights",label:"Insights"},{id:"profile",label:"Profile"}];
+
   return(<ThemeCtx.Provider value={T}><div style={{maxWidth:500,margin:"0 auto",minHeight:"100vh",minHeight:"100dvh",background:T.bg,paddingBottom:"env(safe-area-inset-bottom, 0px)",transition:"background 0.3s"}}><style>{globalStyles}</style>
     <Nav tab={tab} setTab={setTab} count={items.length} theme={theme} toggleTheme={toggleTheme}/>
     {tab==="wardrobe"&&<WardrobeTab items={items} onDelete={del} onUpdate={update} weather={weather} calendar={calendar} hideSeasonal={hideSeasonal} setHideSeasonal={setHideSeasonal}/>}
@@ -397,5 +552,6 @@ export default function App(){
     {tab==="outfits"&&<OutfitsTab items={items} onSave={saveO} weather={weather} blacklist={blacklist} addBlacklist={addBlacklist}/>}
     {tab==="saved"&&<SavedTab saved={saved} items={items} onDelete={delO}/>}
     {tab==="insights"&&<InsightsTab items={items} saved={saved}/>}
+    {tab==="profile"&&<ProfileTab/>}
   </div></ThemeCtx.Provider>);
 }
