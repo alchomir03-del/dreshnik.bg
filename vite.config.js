@@ -9,9 +9,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg'],
       manifest: {
-        name: 'DRESHNIK.ai',
+        name: 'DRESHNIK.bg',
         short_name: 'Dreshnik',
-        description: 'Your AI-powered digital wardrobe',
+        description: 'Твоят дигитален гардероб',
         theme_color: '#080808',
         background_color: '#080808',
         display: 'standalone',
