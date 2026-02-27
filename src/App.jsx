@@ -45,12 +45,12 @@ const COLORS=[
 ];
 const MATERIALS=["Памук","Лен","Коприна","Вълна","Кашмир","Деним","Кожа","Велур","Полиестер","Найлон","Кадифе","Кордюрой","Трико","Флийс","Gore-Tex"];
 const BRANDS=["Nike","Adidas","Zara","H&M","Uniqlo","COS","Massimo Dutti","Ralph Lauren","Tommy Hilfiger","Calvin Klein","Hugo Boss","Levi's","New Balance","Converse","Друг"];
-const F={serif:"'Cormorant Garamond',Georgia,serif",sans:"'Syne','Helvetica Neue',sans-serif",mono:"'JetBrains Mono','SF Mono',monospace"};
+const F={serif:"'Playfair Display','Cormorant Garamond',Georgia,serif",sans:"'Inter','Helvetica Neue',sans-serif",mono:"'JetBrains Mono','SF Mono',monospace",display:"'Playfair Display',Georgia,serif",editorial:"'Cormorant Garamond',Georgia,serif"};
 
 // === Themes ===
 const THEMES={
-  dark:{bg:"#080808",surface:"#0F0F0F",card:"#131313",border:"#1C1C1C",borderLight:"#262626",text:"#EAEAEA",textSoft:"#BBBBBB",textMuted:"#777777",textDim:"#444444",glow:"rgba(255,255,255,0.03)",overlay:"rgba(0,0,0,0.8)",danger:"#331111",dangerText:"#CC4444",imgOpacity:0.85,shadow:"none",accent:"#EAEAEA"},
-  light:{bg:"#F7F6F3",surface:"#FFFFFF",card:"#FFFFFF",border:"#E5E3DE",borderLight:"#D5D3CE",text:"#1A1A1A",textSoft:"#444444",textMuted:"#888888",textDim:"#BBBBBB",glow:"rgba(0,0,0,0.02)",overlay:"rgba(255,255,255,0.85)",danger:"#FFDDDD",dangerText:"#CC3333",imgOpacity:1,shadow:"0 1px 3px rgba(0,0,0,0.06)",accent:"#1A1A1A"},
+  dark:{bg:"#060606",surface:"#0A0A0A",card:"#0E0E0E",border:"#1A1A1A",borderLight:"#222222",text:"#F0EDE8",textSoft:"#C4BFB6",textMuted:"#7A7670",textDim:"#3E3C38",glow:"rgba(240,237,232,0.03)",overlay:"rgba(0,0,0,0.85)",danger:"#2A1111",dangerText:"#CC4444",imgOpacity:0.9,shadow:"none",accent:"#F0EDE8",editorial:"#C8B078",divider:"#1A1A1A",tagBorder:"#2A2824"},
+  light:{bg:"#F5F2ED",surface:"#FFFEFA",card:"#FFFEFA",border:"#E0DCD4",borderLight:"#D5D1C9",text:"#1A1815",textSoft:"#3E3C38",textMuted:"#7A7670",textDim:"#B5B0A6",glow:"rgba(26,24,21,0.02)",overlay:"rgba(245,242,237,0.9)",danger:"#FFDDDD",dangerText:"#CC3333",imgOpacity:1,shadow:"0 1px 2px rgba(0,0,0,0.04)",accent:"#1A1815",editorial:"#8B7A50",divider:"#E0DCD4",tagBorder:"#D5D1C9"},
 };
 const ThemeCtx=createContext(THEMES.dark);
 const useTheme=()=>useContext(ThemeCtx);
@@ -150,24 +150,24 @@ function todayKey(){return dateKey(new Date());}
 function useCurrency(){const{settings}=useAuth()||{};return settings?.currency||"BGN";}
 
 // === Shared UI ===
-function Pill({children,active,onClick,small}){const T=useTheme();return(<button onClick={onClick} style={{padding:small?"6px 14px":"8px 18px",borderRadius:100,border:active?"1px solid "+T.text:"1px solid "+T.border,background:active?T.text:"transparent",color:active?T.bg:T.textMuted,fontFamily:F.sans,fontSize:small?11:12,fontWeight:500,cursor:"pointer",transition:"all 0.25s",whiteSpace:"nowrap"}}>{children}</button>);}
-function Logo({size=28,animate}){const T=useTheme();return(<span style={{fontFamily:F.serif,fontSize:size,color:T.text,animation:animate?"pulse 2s ease-in-out infinite":"none"}}><span style={{fontWeight:600}}>DRESHNIK</span><span style={{fontWeight:300,color:T.textMuted}}>.bg</span></span>);}
+function Pill({children,active,onClick,small}){const T=useTheme();return(<button onClick={onClick} style={{padding:small?"6px 16px":"9px 20px",borderRadius:0,border:active?"1px solid "+T.text:"1px solid "+(T.tagBorder||T.border),background:active?T.text:"transparent",color:active?T.bg:T.textMuted,fontFamily:F.mono,fontSize:small?10:11,fontWeight:400,cursor:"pointer",transition:"all 0.3s",whiteSpace:"nowrap",letterSpacing:"0.06em",textTransform:"uppercase"}}>{children}</button>);}
+function Logo({size=28,animate}){const T=useTheme();return(<div style={{display:"flex",alignItems:"baseline",gap:0,animation:animate?"pulse 2s ease-in-out infinite":"none"}}><span style={{fontFamily:F.display,fontSize:size,fontWeight:700,color:T.text,letterSpacing:"-0.02em",fontStyle:"italic"}}>D</span><span style={{fontFamily:F.mono,fontSize:size*0.42,fontWeight:300,color:T.textMuted,letterSpacing:"0.2em",textTransform:"uppercase",marginLeft:2}}>RESHNIK</span><span style={{fontFamily:F.editorial,fontSize:size*0.48,color:T.editorial,fontWeight:300,fontStyle:"italic",marginLeft:4}}>.bg</span></div>);}
 function ColorBar({items}){const all=items.flatMap(i=>i.colors||[]);if(!all.length)return null;return(<div style={{display:"flex",height:3,borderRadius:2,overflow:"hidden",gap:1}}>{all.map((c,i)=><div key={i} style={{flex:1,background:c}}/>)}</div>);}
 function WeatherBar({weather}){const T=useTheme(),t=useT();if(!weather)return null;const desc=t(weather.desc);return(<div style={{margin:"14px 14px 0",padding:"16px 18px",background:T.card,border:"1px solid "+T.border,borderRadius:4,display:"flex",alignItems:"center",justifyContent:"space-between",boxShadow:T.shadow}}><div style={{display:"flex",alignItems:"center",gap:12}}><span style={{fontSize:28}}>{weather.icon}</span><div><p style={{fontFamily:F.sans,fontSize:20,color:T.text,margin:0,fontWeight:500}}>{weather.temp}°</p><p style={{fontFamily:F.sans,fontSize:11,color:T.textMuted,margin:"2px 0 0"}}>{desc}{weather.city?" / "+weather.city:""}</p></div></div><div style={{textAlign:"right"}}><p style={{fontFamily:F.sans,fontSize:11,color:T.textDim,margin:"0 0 2px"}}>{weather.high}° / {weather.low}°</p>{weather.rainChance>0&&<p style={{fontFamily:F.sans,fontSize:11,color:T.textDim,margin:0}}>{t("Дъжд ")+weather.rainChance}%</p>}</div></div>);}
 function EmptyState({icon,title,sub}){const T=useTheme();return(<div style={{textAlign:"center",padding:"48px 24px"}}><div style={{fontSize:36,marginBottom:16,opacity:0.4}}>{icon}</div><p style={{fontFamily:F.serif,fontSize:20,color:T.text,fontWeight:300,marginBottom:6}}>{title}</p><p style={{fontFamily:F.mono,fontSize:11,color:T.textDim,letterSpacing:"0.08em"}}>{sub}</p></div>);}
 
 function Nav({tab,setTab,count,theme,toggleTheme}){
-  const T=useTheme();
-  const tabs=[{id:"wardrobe",icon:"◩",label:t("Гардероб")},{id:"add",icon:"+",label:t("Добави")},{id:"outfits",icon:"✦",label:t("Стил")},{id:"saved",icon:"♡",label:t("Запазени")},{id:"insights",icon:"◎",label:t("Анализ")},{id:"profile",icon:"○",label:t("Профил")}];
-  return(<div style={{background:T.bg,borderBottom:"1px solid "+T.border,position:"sticky",top:0,zIndex:100,paddingTop:"env(safe-area-inset-top, 0px)"}}>
-    <div style={{padding:"18px 22px 0"}}><div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
-      <Logo size={26}/>
-      <div style={{display:"flex",alignItems:"center",gap:12}}>
-        <button onClick={toggleTheme} style={{background:"none",border:"1px solid "+T.border,borderRadius:"50%",width:28,height:28,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,padding:0,color:T.textMuted}}>{theme==="dark"?"☀":"☾"}</button>
-        <span style={{fontFamily:F.mono,fontSize:10,color:T.textDim,letterSpacing:"0.08em"}}>{count}</span>
+  const T=useTheme(),t=useT();
+  const tabs=[{id:"wardrobe",label:t("Гардероб")},{id:"add",label:t("Добави")},{id:"outfits",label:t("Стил")},{id:"saved",label:t("Запазени")},{id:"insights",label:t("Анализ")},{id:"profile",label:t("Профил")}];
+  return(<div style={{background:T.bg,position:"sticky",top:0,zIndex:100,paddingTop:"env(safe-area-inset-top, 0px)"}}>
+    <div style={{padding:"20px 22px 0"}}><div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:6}}>
+      <Logo size={24}/>
+      <div style={{display:"flex",alignItems:"center",gap:14}}>
+        <button onClick={toggleTheme} style={{background:"none",border:"none",cursor:"pointer",padding:0,fontFamily:F.editorial,fontSize:16,color:T.textMuted,fontStyle:"italic",transition:"color 0.3s"}}>{theme==="dark"?"☀":"☾"}</button>
+        <span style={{fontFamily:F.mono,fontSize:9,color:T.textDim,letterSpacing:"0.14em"}}>{count} {t("ПАРЧЕТА")}</span>
       </div>
-    </div></div>
-    <div style={{display:"flex",padding:"0 4px"}}>{tabs.map(t=>(<button key={t.id} onClick={()=>setTab(t.id)} style={{flex:1,padding:"10px 0 12px",border:"none",background:"none",borderBottom:tab===t.id?"1.5px solid "+T.text:"1.5px solid transparent",color:tab===t.id?T.text:T.textDim,fontFamily:F.sans,fontSize:11,fontWeight:tab===t.id?600:400,cursor:"pointer",transition:"all 0.3s"}}>{t.label}</button>))}</div>
+    </div><div style={{height:1,background:T.divider||T.border,margin:"12px 0 0"}}/></div>
+    <div style={{display:"flex",padding:"0 12px"}}>{tabs.map(tb=>{const isActive=tab===tb.id;return(<button key={tb.id} onClick={()=>setTab(tb.id)} style={{flex:1,padding:"14px 0 13px",border:"none",background:"none",color:isActive?T.text:T.textDim,fontFamily:isActive?F.editorial:F.sans,fontSize:isActive?13:10,fontStyle:isActive?"italic":"normal",cursor:"pointer",transition:"all 0.35s ease",letterSpacing:isActive?"0.02em":"0.06em",textTransform:isActive?"none":"uppercase",borderBottom:isActive?"1.5px solid "+(T.editorial||T.text):"1.5px solid transparent"}}>{tb.label}</button>);})}</div>
   </div>);
 }
 
@@ -387,7 +387,7 @@ function AddTab({onAdd,lastCat}){
   </div>);
 }
 
-// === OutfitsTab ===
+// === OutfitsTab (Editorial Redesign) ===
 function OutfitsTab({items,onSave,weather,blacklist,addBlacklist}){
   const T=useTheme(),toast=useToast(),t=useT();
   const[occ,setOcc]=useState(null);const[results,setResults]=useState([]);const[idx,setIdx]=useState(0);const[anim,setAnim]=useState(false);const[swipeX,setSwipeX]=useState(0);const touchStart=useRef(null);
@@ -397,23 +397,63 @@ function OutfitsTab({items,onSave,weather,blacklist,addBlacklist}){
   const onTS=e=>{touchStart.current=e.touches[0].clientX;};const onTM=e=>{if(touchStart.current!==null)setSwipeX(e.touches[0].clientX-touchStart.current);};const onTE=()=>{if(Math.abs(swipeX)>60){swipeX>0?prev():next();}setSwipeX(0);touchStart.current=null;};
   const shareOutfit=async(cur)=>{const text="DRESHNIK.bg Визия\n\n"+cur.items.map(i=>i.name).join(" + ")+"\n\n"+getExplanation(cur,occ);if(navigator.share){try{await navigator.share({title:"DRESHNIK.bg",text});toast(t("Споделено ✓"),"success");}catch(e){console.warn(e);}}else{await navigator.clipboard?.writeText(text);toast(t("Копирано ✓"),"success");}};
   const cur=results[idx];
-  return(<div style={{padding:"24px 20px 100px"}}>
-    <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:20}}><div><p style={{fontFamily:F.mono,fontSize:10,color:T.textDim,letterSpacing:"0.16em",marginBottom:3}}>{t("AI СТИЛИСТ")}</p><h2 style={{fontFamily:F.serif,fontSize:26,fontWeight:300,color:T.text,margin:0}}>{t("Генерирай визия")}</h2></div>
-    {items.length>=2&&<button onClick={surprise} style={{padding:"8px 14px",borderRadius:2,border:"1px solid "+T.borderLight,background:"transparent",cursor:"pointer",fontFamily:F.mono,fontSize:11,color:T.textMuted,letterSpacing:"0.06em"}}>{t("🎲 ИЗНЕНАДА")}</button>}</div>
-    {weather&&<div style={{display:"flex",alignItems:"center",gap:8,marginBottom:18,padding:"10px 14px",border:"1px solid "+T.border,borderRadius:2}}><span style={{fontSize:16}}>{weather.icon}</span><span style={{fontFamily:F.sans,fontSize:11,color:T.textMuted}}>{weather.temp}° {weather.desc}{weather.rain?t(" — режим за дъжд"):""}</span></div>}
+  const ED=T.editorial||T.accent;const TB=T.tagBorder||T.border;const DV=T.divider||T.border;
+  return(<div style={{padding:"0 0 100px"}}>
+    {/* Editorial Header */}
+    <div style={{padding:"32px 24px 0"}}>
+      <p style={{fontFamily:F.mono,fontSize:9,color:ED,letterSpacing:"0.2em",marginBottom:6}}>AI СТИЛИСТ</p>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:6}}>
+        <h2 style={{fontFamily:F.display||F.serif,fontSize:34,fontWeight:300,fontStyle:"italic",color:T.text,margin:0,lineHeight:1.1}}>{t("Генерирай")}<br/><span style={{color:ED}}>{t("визия")}</span></h2>
+        {items.length>=2&&<button onClick={surprise} style={{padding:"10px 18px",border:"1px solid "+TB,background:"transparent",cursor:"pointer",fontFamily:F.mono,fontSize:9,color:T.textMuted,letterSpacing:"0.1em",marginBottom:4}}>🎲 {t("ИЗНЕНАДА")}</button>}
+      </div>
+      <div style={{height:1,background:DV,margin:"16px 0 0"}}/>
+    </div>
+    {/* Weather */}
+    {weather&&<div style={{padding:"16px 24px",display:"flex",alignItems:"center",gap:10}}><span style={{fontSize:16}}>{weather.icon}</span><span style={{fontFamily:F.editorial||F.serif,fontSize:14,color:T.textMuted,fontStyle:"italic"}}>{weather.temp}° {weather.desc}{weather.rain?t(" — режим за дъжд"):""}</span></div>}
     {items.length<2&&<EmptyState icon="✦" title={t("Добави поне 2 дрехи")} sub={t("ЗА ДА ГЕНЕРИРАШ ВИЗИИ")}/>}
-    <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:5,marginBottom:24}}>{OCCASIONS.map(o=><button key={o.id} onClick={()=>gen(o.id)} disabled={items.length<2} style={{padding:"14px 3px",borderRadius:2,textAlign:"center",border:occ===o.id?"1px solid "+T.text:"1px solid "+T.border,background:occ===o.id?T.glow:"transparent",cursor:items.length<2?"not-allowed":"pointer",opacity:items.length<2?0.3:1}}><div style={{fontFamily:F.sans,fontSize:10,fontWeight:600,color:occ===o.id?T.text:T.textMuted}}>{o.label}</div></button>)}</div>
-    {anim&&<div style={{textAlign:"center",padding:44}}><p style={{fontFamily:F.mono,fontSize:11,color:T.textDim,letterSpacing:"0.12em",animation:"pulse 1s ease-in-out infinite"}}>{t("АНАЛИЗИРАМ КОМБИНАЦИИ")}</p></div>}
-    {!anim&&cur&&<div style={{animation:"fadeIn .35s ease"}} onTouchStart={onTS} onTouchMove={onTM} onTouchEnd={onTE}>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}><h3 style={{fontFamily:F.serif,fontSize:20,fontWeight:300,color:T.text,margin:0}}>{t("Визия")} {idx+1}/{results.length}</h3><div style={{display:"flex",alignItems:"center",gap:4}}>{results.map((_,i)=><div key={i} style={{width:i===idx?16:6,height:3,borderRadius:2,background:i===idx?T.text:T.border,transition:"all 0.3s"}}/>)}</div></div>
-      <div style={{display:"flex",gap:7,overflowX:"auto",paddingBottom:12,marginBottom:14,transform:"translateX("+(swipeX*0.3)+"px)",transition:swipeX?"none":"transform 0.3s"}}>{cur.items.map((item,i)=><div key={item.id} style={{minWidth:135,background:T.card,borderRadius:3,overflow:"hidden",border:"1px solid "+T.border,flexShrink:0,boxShadow:T.shadow,animation:"fadeInUp "+(0.15+i*0.08)+"s ease both"}}>{item.image?<img src={item.image} alt="" style={{width:135,height:165,objectFit:"cover",opacity:T.imgOpacity}}/>:<div style={{width:135,height:165,background:T.surface,display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{fontFamily:F.serif,fontSize:38,color:T.border}}>{CAT_MAP[item.category]?.label?.[0]}</span></div>}<div style={{padding:"9px 11px"}}><p style={{fontSize:10,fontWeight:600,color:T.text,margin:0,fontFamily:F.sans,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{item.name}</p><div style={{display:"flex",gap:2,marginTop:4}}>{item.colors?.slice(0,3).map((c,j)=><div key={j} style={{width:8,height:8,borderRadius:1,background:c}}/>)}</div></div></div>)}</div>
-      <ColorBar items={cur.items}/>
-      <div style={{border:"1px solid "+T.border,borderRadius:2,padding:16,margin:"14px 0"}}><p style={{fontSize:12,color:T.textSoft,margin:"0 0 10px",lineHeight:1.7,fontFamily:F.sans}}>{getExplanation(cur,occ)}</p><div style={{height:1,background:T.border,margin:"0 0 10px"}}/><p style={{fontFamily:F.sans,fontSize:11,color:T.textDim,margin:0,lineHeight:1.6,fontStyle:"italic"}}>{getTip(occ)}</p></div>
-      <p style={{fontFamily:F.mono,fontSize:10,color:T.textDim,textAlign:"center",letterSpacing:"0.1em",marginBottom:12}}>{t("ПЛЪЗНИ ЗА СЛЕДВАЩА")}</p>
-      <div style={{display:"flex",gap:6}}><button onClick={next} style={{flex:1,padding:14,borderRadius:2,border:"1px solid "+T.border,background:"transparent",fontFamily:F.sans,fontSize:10,fontWeight:500,color:T.textMuted,cursor:"pointer",letterSpacing:"0.08em",textTransform:"uppercase"}}>{t("Следваща")}</button>
-      <button onClick={()=>{onSave({id:Date.now().toString(),occasion:OCCASIONS.find(x=>x.id===occ)?.label||occ,itemIds:cur.items.map(i=>i.id),reasoning:getExplanation(cur,occ),tips:getTip(occ),score:cur.score,savedAt:new Date().toISOString()});toast(t("Визия запазена ✓"),"success");}} style={{flex:1,padding:14,borderRadius:2,border:"none",background:T.text,color:T.bg,fontFamily:F.sans,fontSize:10,fontWeight:600,cursor:"pointer",letterSpacing:"0.1em",textTransform:"uppercase"}}>{t("Запази")}</button></div>
-      <div style={{display:"flex",gap:6,marginTop:8}}><button onClick={()=>shareOutfit(cur)} style={{flex:1,padding:12,borderRadius:2,border:"1px solid "+T.border,background:"transparent",fontFamily:F.mono,fontSize:11,color:T.textMuted,cursor:"pointer",letterSpacing:"0.06em"}}>{t("СПОДЕЛИ")}</button>
-      <button onClick={()=>{const key=cur.items.map(i=>i.id).sort().join(",");addBlacklist(key);next();toast(t("Комбинацията няма да се предлага"),"info");}} style={{flex:1,padding:12,borderRadius:2,border:"1px solid "+T.danger,background:"transparent",fontFamily:F.mono,fontSize:11,color:T.dangerText,cursor:"pointer",letterSpacing:"0.06em"}}>{t("НЕ ПРЕДЛАГАЙ")}</button></div>
+    {/* Occasions */}
+    <div style={{padding:"12px 24px 0"}}>
+      <p style={{fontFamily:F.mono,fontSize:9,color:T.textDim,letterSpacing:"0.14em",marginBottom:10}}>ПОВОД</p>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6,marginBottom:28}}>{OCCASIONS.map(o=><button key={o.id} onClick={()=>gen(o.id)} disabled={items.length<2} style={{padding:"16px 3px",textAlign:"center",cursor:items.length<2?"not-allowed":"pointer",border:occ===o.id?"1px solid "+ED:"1px solid "+TB,background:"transparent",opacity:items.length<2?0.25:1,transition:"all 0.3s"}}><div style={{fontFamily:occ===o.id?(F.editorial||F.serif):F.sans,fontSize:occ===o.id?12:10,fontWeight:400,color:occ===o.id?ED:T.textMuted,fontStyle:occ===o.id?"italic":"normal",letterSpacing:occ===o.id?"0.02em":"0.04em",transition:"all 0.3s"}}>{o.label}</div></button>)}</div>
+    </div>
+    {/* Loading */}
+    {anim&&<div style={{textAlign:"center",padding:"52px 28px"}}><div style={{fontFamily:F.display||F.serif,fontSize:20,color:T.textDim,fontStyle:"italic",animation:"pulse 1.2s ease-in-out infinite"}}>{t("Анализирам комбинации")}...</div></div>}
+    {/* Results */}
+    {!anim&&cur&&<div style={{animation:"fadeIn .4s ease"}} onTouchStart={onTS} onTouchMove={onTM} onTouchEnd={onTE}>
+      {/* Issue Number */}
+      <div style={{padding:"0 24px",marginBottom:18}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline"}}>
+          <div style={{display:"flex",alignItems:"baseline",gap:10}}>
+            <span style={{fontFamily:F.display||F.serif,fontSize:48,fontWeight:300,color:T.textDim,lineHeight:1,fontStyle:"italic"}}>{String(idx+1).padStart(2,"0")}</span>
+            <div><p style={{fontFamily:F.editorial||F.serif,fontSize:16,color:T.text,fontWeight:400,fontStyle:"italic",margin:0}}>{t("Визия")}</p><p style={{fontFamily:F.mono,fontSize:9,color:T.textDim,letterSpacing:"0.1em",margin:"2px 0 0"}}>{t("от")} {results.length}</p></div>
+          </div>
+          <div style={{display:"flex",alignItems:"center",gap:4}}>{results.map((_,i)=><div key={i} style={{width:i===idx?18:4,height:2,background:i===idx?ED:T.border,transition:"all 0.35s"}}/>)}</div>
+        </div>
+        <div style={{height:1,background:DV,marginTop:14}}/>
+      </div>
+      {/* Items — Asymmetric editorial grid */}
+      <div style={{padding:"0 24px",marginBottom:16}}>
+        {cur.items.length<=2?(<div style={{display:"grid",gridTemplateColumns:cur.items.length===1?"1fr":"1fr 1fr",gap:8}}>{cur.items.map((item,i)=><div key={item.id} style={{overflow:"hidden",animation:"fadeInUp "+(0.15+i*0.1)+"s ease both"}}>{item.image?<img src={item.image} alt="" style={{width:"100%",height:280,objectFit:"cover",opacity:T.imgOpacity,display:"block"}}/>:<div style={{width:"100%",height:280,background:T.surface,display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{fontFamily:F.display||F.serif,fontSize:44,color:T.border,fontStyle:"italic"}}>{CAT_MAP[item.category]?.label?.[0]}</span></div>}<div style={{padding:"10px 0 0"}}><p style={{fontFamily:F.sans,fontSize:11,fontWeight:500,color:T.text,margin:0}}>{item.name}</p><div style={{display:"flex",gap:3,marginTop:5}}>{item.colors?.slice(0,3).map((c,j)=><div key={j} style={{width:8,height:8,background:c}}/>)}</div></div></div>)}</div>):(
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gridTemplateRows:"auto auto",gap:8}}>
+          <div style={{gridRow:cur.items.length>3?"1 / 3":"1",overflow:"hidden",animation:"fadeInUp 0.15s ease both"}}>{cur.items[0].image?<img src={cur.items[0].image} alt="" style={{width:"100%",height:cur.items.length>3?320:200,objectFit:"cover",opacity:T.imgOpacity,display:"block"}}/>:<div style={{width:"100%",height:cur.items.length>3?320:200,background:T.surface,display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{fontFamily:F.display||F.serif,fontSize:44,color:T.border,fontStyle:"italic"}}>{CAT_MAP[cur.items[0].category]?.label?.[0]}</span></div>}<div style={{padding:"8px 0 0"}}><p style={{fontFamily:F.sans,fontSize:11,fontWeight:500,color:T.text,margin:0}}>{cur.items[0].name}</p><div style={{display:"flex",gap:3,marginTop:4}}>{cur.items[0].colors?.slice(0,3).map((c,j)=><div key={j} style={{width:8,height:8,background:c}}/>)}</div></div></div>
+          {cur.items.slice(1).map((item,i)=><div key={item.id} style={{overflow:"hidden",animation:"fadeInUp "+(0.2+i*0.08)+"s ease both"}}>{item.image?<img src={item.image} alt="" style={{width:"100%",height:cur.items.length>3?152:200,objectFit:"cover",opacity:T.imgOpacity,display:"block"}}/>:<div style={{width:"100%",height:cur.items.length>3?152:200,background:T.surface,display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{fontFamily:F.display||F.serif,fontSize:32,color:T.border,fontStyle:"italic"}}>{CAT_MAP[item.category]?.label?.[0]}</span></div>}<div style={{padding:"8px 0 0"}}><p style={{fontFamily:F.sans,fontSize:10,fontWeight:500,color:T.text,margin:0}}>{item.name}</p><div style={{display:"flex",gap:2,marginTop:3}}>{item.colors?.slice(0,3).map((c,j)=><div key={j} style={{width:6,height:6,background:c}}/>)}</div></div></div>)}
+        </div>)}
+      </div>
+      <div style={{padding:"0 24px"}}><ColorBar items={cur.items}/></div>
+      {/* Editorial explanation */}
+      <div style={{padding:"0 24px",margin:"18px 0"}}><div style={{borderLeft:"2px solid "+ED,padding:"16px 20px"}}><p style={{fontFamily:F.editorial||F.serif,fontSize:15,color:T.textSoft,margin:"0 0 12px",lineHeight:1.8,fontStyle:"italic"}}>{getExplanation(cur,occ)}</p><div style={{height:1,background:DV,margin:"0 0 12px"}}/><p style={{fontFamily:F.sans,fontSize:11,color:T.textDim,margin:0,lineHeight:1.6}}>💡 {getTip(occ)}</p></div></div>
+      <p style={{fontFamily:F.mono,fontSize:9,color:T.textDim,textAlign:"center",letterSpacing:"0.14em",marginBottom:14}}>← {t("ПЛЪЗНИ ЗА СЛЕДВАЩА")} →</p>
+      {/* Actions */}
+      <div style={{padding:"0 24px"}}>
+        <div style={{display:"flex",gap:8,marginBottom:10}}>
+          <button onClick={next} style={{flex:1,padding:15,border:"1px solid "+TB,background:"transparent",fontFamily:F.mono,fontSize:9,color:T.textMuted,cursor:"pointer",letterSpacing:"0.1em"}}>СЛЕДВАЩА</button>
+          <button onClick={()=>{onSave({id:Date.now().toString(),occasion:OCCASIONS.find(x=>x.id===occ)?.label||occ,itemIds:cur.items.map(i=>i.id),reasoning:getExplanation(cur,occ),tips:getTip(occ),score:cur.score,savedAt:new Date().toISOString()});toast(t("Визия запазена ✓"),"success");}} style={{flex:1,padding:15,border:"none",background:ED,color:"#060606",fontFamily:F.mono,fontSize:9,fontWeight:600,cursor:"pointer",letterSpacing:"0.12em"}}>ЗАПАЗИ ВИЗИЯ</button>
+        </div>
+        <div style={{display:"flex",gap:8}}>
+          <button onClick={()=>shareOutfit(cur)} style={{flex:1,padding:13,border:"1px solid "+TB,background:"transparent",fontFamily:F.mono,fontSize:9,color:T.textMuted,cursor:"pointer",letterSpacing:"0.08em"}}>СПОДЕЛИ</button>
+          <button onClick={()=>{const key=cur.items.map(i=>i.id).sort().join(",");addBlacklist(key);next();toast(t("Комбинацията няма да се предлага"),"info");}} style={{flex:1,padding:13,border:"1px solid "+T.danger,background:"transparent",fontFamily:F.mono,fontSize:9,color:T.dangerText,cursor:"pointer",letterSpacing:"0.08em"}}>НЕ ПРЕДЛАГАЙ</button>
+        </div>
+      </div>
     </div>}
   </div>);
 }
@@ -560,7 +600,7 @@ function ProfileTab(){
         <button onClick={handleDelete} disabled={!isGoogle&&!delPass} style={{flex:1,padding:12,borderRadius:2,border:"none",background:T.dangerText,color:"#fff",fontFamily:F.mono,fontSize:11,cursor:"pointer",opacity:busy?0.5:1}}>{t("ИЗТРИЙ")}</button></div>
       </div>}
     </Section>
-    <p style={{fontFamily:F.mono,fontSize:10,color:T.textDim,textAlign:"center",letterSpacing:"0.08em",marginTop:20}}>DRESHNIK.BG v8 · MADE IN BULGARIA 🇧🇬</p>
+    <p style={{fontFamily:F.mono,fontSize:10,color:T.textDim,textAlign:"center",letterSpacing:"0.08em",marginTop:20}}>DRESHNIK.BG v9 · EDITORIAL · MADE IN BULGARIA 🇧🇬</p>
   </div>);
 }
 
@@ -610,7 +650,7 @@ export default function App(){
   const saveO=(o)=>setSaved(p=>[o,...p]);const delO=(id)=>setSaved(p=>p.filter(o=>o.id!==id));
   const addBlacklist=(key)=>setBlacklist(p=>[...p,key]);
   const T=THEMES[theme]||THEMES.dark;
-  const globalStyles=`@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Syne:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap');@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}::-webkit-scrollbar{display:none}html{height:-webkit-fill-available}body{background:${T.bg};margin:0;min-height:100dvh;padding:env(safe-area-inset-top,0) env(safe-area-inset-right,0) env(safe-area-inset-bottom,0) env(safe-area-inset-left,0);transition:background 0.3s}@supports not (min-height:100dvh){body{min-height:100vh;min-height:-webkit-fill-available}}input,select,button,textarea{outline:none}input:focus,textarea:focus{border-color:${theme==="dark"?"#333":"#AAA"} !important}::placeholder{color:${T.textDim}}video{-webkit-transform:translateZ(0)}`;
+  const globalStyles=`@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap');@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}::-webkit-scrollbar{display:none}html{height:-webkit-fill-available}body{background:${T.bg};margin:0;min-height:100dvh;padding:env(safe-area-inset-top,0) env(safe-area-inset-right,0) env(safe-area-inset-bottom,0) env(safe-area-inset-left,0);transition:background 0.3s}@supports not (min-height:100dvh){body{min-height:100vh;min-height:-webkit-fill-available}}input,select,button,textarea{outline:none}input:focus,textarea:focus{border-color:${theme==="dark"?"#333":"#AAA"} !important}::placeholder{color:${T.textDim}}video{-webkit-transform:translateZ(0)}`;
 
   if(authLoading||!loaded)return(<ThemeCtx.Provider value={T}><div style={{height:"100dvh",display:"flex",alignItems:"center",justifyContent:"center",background:T.bg}}><style>{globalStyles}</style><Logo size={28} animate/></div></ThemeCtx.Provider>);
   if(!user)return(<ThemeCtx.Provider value={T}><style>{globalStyles}</style><ToastProvider><ConfirmProvider><AuthScreen/></ConfirmProvider></ToastProvider></ThemeCtx.Provider>);
