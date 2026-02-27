@@ -14,9 +14,8 @@ import {
   reauthenticateWithCredential,
 } from "firebase/auth";
 import {
-  doc, getDoc, setDoc, updateDoc, collection,
-  writeBatch, onSnapshot, deleteDoc,
-  query, getDocs,
+  doc, getDoc, setDoc, collection,
+  writeBatch, deleteDoc, getDocs,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { auth, googleProvider, db, storage } from "./firebase";
