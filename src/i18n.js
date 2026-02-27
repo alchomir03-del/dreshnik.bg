@@ -71,6 +71,7 @@ const translations = {
   "МАРКА": { en: "BRAND" },
   "СТИЛ": { en: "STYLE" },
   "СЕЗОН": { en: "SEASON" },
+  "Сезон": { en: "Season" },
   "ЗАПАЗИ ПРОМЕНИТЕ": { en: "SAVE CHANGES" },
   "КАПСУЛА": { en: "CAPSULE" },
   "В ПЕРАЛНЯ": { en: "IN LAUNDRY" },

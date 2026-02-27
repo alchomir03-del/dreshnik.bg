@@ -368,7 +368,7 @@ function AddTab({onAdd,lastCat}){
       </div></div>):(<div style={{display:"flex",flexDirection:"column",gap:12}}>
       <button onClick={startCam} style={{padding:"44px 20px",borderRadius:4,border:"1px solid "+T.border,background:T.subtleBg,cursor:"pointer",textAlign:"center",transition:"all 0.3s"}}><p style={{fontFamily:F.serif,fontSize:16,color:T.text,margin:"0 0 4px",fontWeight:300}}>{t("Снимай с камера")}</p><p style={{fontFamily:F.mono,fontSize:10,color:T.textDim,margin:0,letterSpacing:"0.14em"}}>{t("НАПРАВИ СНИМКА")}</p></button>
       <button onClick={()=>fileRef.current?.click()} style={{padding:"24px 20px",borderRadius:4,border:"1px solid "+T.border,background:T.subtleBg,cursor:"pointer",textAlign:"center",transition:"all 0.3s"}}><p style={{fontFamily:F.serif,fontSize:16,color:T.text,margin:"0 0 4px",fontWeight:300}}>{t("Качи от галерия")}</p><p style={{fontFamily:F.mono,fontSize:10,color:T.textDim,margin:0,letterSpacing:"0.12em"}}>{t("ИЗБЕРИ ФАЙЛ")}</p></button>
-      <div style={{display:"flex",alignItems:"center",gap:14,margin:"6px 0"}}><div style={{flex:1,height:1,background:T.border}}/><span style={{fontFamily:F.mono,fontSize:10,color:T.textDim,letterSpacing:"0.16em"}}>ИЛИ</span><div style={{flex:1,height:1,background:T.border}}/></div>
+      <div style={{display:"flex",alignItems:"center",gap:14,margin:"6px 0"}}><div style={{flex:1,height:1,background:T.border}}/><span style={{fontFamily:F.mono,fontSize:10,color:T.textDim,letterSpacing:"0.16em"}}>{t("ИЛИ")}</span><div style={{flex:1,height:1,background:T.border}}/></div>
       <button onClick={()=>{setImg(null);setStep("details");}} style={{padding:"14px",borderRadius:4,border:"1px solid "+T.border,background:"transparent",fontFamily:F.mono,fontSize:10,color:T.textDim,letterSpacing:"0.12em",cursor:"pointer",textAlign:"center"}}>{t("БЕЗ СНИМКА")}</button>
       <input ref={fileRef} type="file" accept="image/*" onChange={handleFile} style={{display:"none"}}/>
     </div>)}</div>);}
@@ -402,7 +402,7 @@ function OutfitsTab({items,onSave,weather,blacklist,addBlacklist}){
   return(<div style={{padding:"28px 20px 100px"}}>
     {/* Editorial header */}
     <div style={{marginBottom:36}}>
-      <p style={{fontFamily:F.mono,fontSize:10,letterSpacing:"0.3em",color:T.textDim,marginBottom:8,textTransform:"uppercase"}}>{t("Сезон")} {t(seasonLabel)} · {new Date().toLocaleDateString("bg-BG",{day:"2-digit",month:"2-digit",year:"numeric"})}</p>
+      <p style={{fontFamily:F.mono,fontSize:10,letterSpacing:"0.3em",color:T.textDim,marginBottom:8,textTransform:"uppercase"}}>{t("Сезон")} {t(seasonLabel)} · {new Date().toLocaleDateString("en-GB",{day:"2-digit",month:"2-digit",year:"numeric"})}</p>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end"}}>
         <h2 style={{fontFamily:F.serif,fontSize:38,fontWeight:300,color:T.text,margin:0,letterSpacing:"-0.02em",lineHeight:1.1}}>{t("Стилист")}</h2>
         {items.length>=2&&<button onClick={surprise} style={{padding:"8px 16px",borderRadius:100,border:"1px solid "+T.pillBorder,background:T.pillBg,cursor:"pointer",fontFamily:F.mono,fontSize:10,color:T.textMuted,letterSpacing:"0.06em"}}>{t("🎲 ИЗНЕНАДА")}</button>}
@@ -420,7 +420,7 @@ function OutfitsTab({items,onSave,weather,blacklist,addBlacklist}){
 
     {/* Occasions — editorial horizontal scroll */}
     <div style={{display:"flex",gap:0,marginBottom:36,overflowX:"auto",paddingBottom:4}}>{OCCASIONS.map(o=><button key={o.id} onClick={()=>gen(o.id)} disabled={items.length<2} style={{padding:"16px 20px",background:"transparent",border:"none",borderBottom:occ===o.id?"1px solid "+T.text:"1px solid transparent",cursor:items.length<2?"not-allowed":"pointer",whiteSpace:"nowrap",transition:"all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",opacity:items.length<2?0.3:1}}>
-      <span style={{fontFamily:F.serif,fontSize:occ===o.id?15:13,color:occ===o.id?T.text:T.textDim,fontWeight:occ===o.id?500:300,letterSpacing:"0.02em",transition:"all 0.3s"}}>{o.label}</span>
+      <span style={{fontFamily:F.serif,fontSize:occ===o.id?15:13,color:occ===o.id?T.text:T.textDim,fontWeight:occ===o.id?500:300,letterSpacing:"0.02em",transition:"all 0.3s"}}>{t(o.label)}</span>
     </button>)}</div>
 
     {/* Loading animation */}
@@ -544,7 +544,7 @@ function AuthScreen(){
       {mode!=="reset"&&<input value={pass} onChange={e=>setPass(e.target.value)} placeholder={t("Парола")} type="password" autoComplete={mode==="register"?"new-password":"current-password"} style={inputSt}/>}
       <button onClick={submit} disabled={busy||!email||(mode!=="reset"&&!pass)} style={{width:"100%",padding:16,borderRadius:3,border:"none",background:T.text,color:T.bg,fontFamily:F.sans,fontSize:11,fontWeight:600,cursor:"pointer",letterSpacing:"0.14em",textTransform:"uppercase",opacity:busy?0.5:1,marginBottom:12,transition:"all 0.3s"}}>{busy?"...":(mode==="login"?t("Влез"):mode==="register"?t("Създай акаунт"):t("Изпрати линк"))}</button>
     </>:null}
-    {mode!=="reset"&&<><div style={{display:"flex",alignItems:"center",gap:14,margin:"8px 0 20px"}}><div style={{flex:1,height:1,background:T.border}}/><span style={{fontFamily:F.mono,fontSize:10,color:T.textDim}}>ИЛИ</span><div style={{flex:1,height:1,background:T.border}}/></div>
+    {mode!=="reset"&&<><div style={{display:"flex",alignItems:"center",gap:14,margin:"8px 0 20px"}}><div style={{flex:1,height:1,background:T.border}}/><span style={{fontFamily:F.mono,fontSize:10,color:T.textDim}}>{t("ИЛИ")}</span><div style={{flex:1,height:1,background:T.border}}/></div>
     <button onClick={async()=>{setBusy(true);try{await loginGoogle();}catch(e){console.warn(e);}finally{setBusy(false);}}} style={{width:"100%",padding:14,borderRadius:3,border:"1px solid "+T.border,background:"transparent",fontFamily:F.sans,fontSize:12,fontWeight:500,color:T.text,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:10,marginBottom:16}}>
       <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
       Продължи с Google
