@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, useRef } from "react";
 import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
@@ -104,37 +104,45 @@ export function AuthProvider({ children }) {
     }
   };
 
+  // ---- Refs for latest state (avoid stale closures) ----
+  const profileRef = useRef(profile);
+  const settingsRef = useRef(settings);
+  useEffect(() => { profileRef.current = profile; }, [profile]);
+  useEffect(() => { settingsRef.current = settings; }, [settings]);
+
   // ---- Save profile to Firestore ----
   const saveProfile = useCallback(async (updates) => {
     if (!user) return;
-    const merged = { ...profile, ...updates };
+    const merged = { ...profileRef.current, ...updates };
     setProfile(merged);
+    profileRef.current = merged;
     try {
       await setDoc(doc(db, "users", user.uid), {
         profile: merged,
-        settings,
+        settings: settingsRef.current,
         updatedAt: new Date().toISOString(),
       }, { merge: true });
     } catch (e) {
       console.warn("Save profile:", e);
     }
-  }, [user, profile, settings]);
+  }, [user]);
 
   // ---- Save settings to Firestore ----
   const saveSettings = useCallback(async (updates) => {
     if (!user) return;
-    const merged = { ...settings, ...updates };
+    const merged = { ...settingsRef.current, ...updates };
     setSettings(merged);
+    settingsRef.current = merged;
     try {
       await setDoc(doc(db, "users", user.uid), {
-        profile,
+        profile: profileRef.current,
         settings: merged,
         updatedAt: new Date().toISOString(),
       }, { merge: true });
     } catch (e) {
       console.warn("Save settings:", e);
     }
-  }, [user, profile, settings]);
+  }, [user]);
 
   // ---- Auth methods ----
   const loginEmail = async (email, password) => {

@@ -1,4 +1,4 @@
-# DRESHNIK.bg
+# DRESHNIK.ai
 
 Your AI-powered digital wardrobe. Catalogue your clothes and generate perfect outfit combinations using color theory.
 
