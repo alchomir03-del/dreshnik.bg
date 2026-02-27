@@ -33,7 +33,7 @@ const DEFAULT_PROFILE = {
   bodyType: "",
   location: "",
   dailyBudget: 0,
-  currency: "лв",
+  currency: "BGN",
   shoeSize: "",
   topSize: "",
   bottomSize: "",
@@ -43,7 +43,7 @@ const DEFAULT_PROFILE = {
 
 const DEFAULT_SETTINGS = {
   theme: "dark",
-  currency: "лв",
+  currency: "BGN",
   language: "bg",
   seasonalRotation: false,
   notifyMorningOutfit: true,
@@ -99,13 +99,14 @@ export function AuthProvider({ children }) {
         // Filter out undefined/null values before merging
         const cleanProfile = data.profile ? Object.fromEntries(Object.entries(data.profile).filter(([,v]) => v !== undefined)) : {};
         const cleanSettings = data.settings ? Object.fromEntries(Object.entries(data.settings).filter(([,v]) => v !== undefined)) : {};
+        // Migrate old currency value
+        if (cleanSettings.currency === "лв") cleanSettings.currency = "BGN";
         const mergedProfile = { ...DEFAULT_PROFILE, ...cleanProfile };
         const mergedSettings = { ...DEFAULT_SETTINGS, ...cleanSettings };
         setProfile(mergedProfile);
         setSettings(mergedSettings);
         profileRef.current = mergedProfile;
         settingsRef.current = mergedSettings;
-        console.log("[loadUserData] settings:", mergedSettings);
       }
     } catch (e) {
       console.warn("Load user data:", e);
@@ -137,11 +138,9 @@ export function AuthProvider({ children }) {
 
   // ---- Save settings to Firestore ----
   const saveSettings = useCallback(async (updates) => {
-    console.log("[saveSettings] called with:", updates, "user:", !!user);
     if (!user) return;
     const current = settingsRef.current || {};
     const merged = { ...current, ...updates };
-    console.log("[saveSettings] merged:", merged);
     setSettings(merged);
     settingsRef.current = merged;
     try {
@@ -150,7 +149,6 @@ export function AuthProvider({ children }) {
         settings: merged,
         updatedAt: new Date().toISOString(),
       }, { merge: true });
-      console.log("[saveSettings] saved to Firestore OK");
     } catch (e) {
       console.warn("Save settings:", e);
     }
