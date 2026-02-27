@@ -164,10 +164,9 @@ function Nav({tab,setTab,count,theme,toggleTheme}){
       <Logo size={24}/>
       <div style={{display:"flex",alignItems:"center",gap:14}}>
         <button onClick={toggleTheme} style={{background:"none",border:"1px solid "+T.border,borderRadius:"50%",width:26,height:26,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,padding:0,color:T.textDim,transition:"all 0.3s"}}>{theme==="dark"?"☀":"☾"}</button>
-        <span style={{fontFamily:F.mono,fontSize:10,color:T.textDim,letterSpacing:"0.12em"}}>{count}</span>
       </div>
     </div></div>
-    <div style={{display:"flex",padding:"0 8px",overflowX:"auto"}}>{tabs.map(tb=>(<button key={tb.id} onClick={()=>setTab(tb.id)} style={{flex:"1 0 auto",padding:"12px 10px 14px",border:"none",background:"none",borderBottom:tab===tb.id?"1px solid "+T.text:"1px solid transparent",color:tab===tb.id?T.text:T.textDim,fontFamily:F.serif,fontSize:tab===tb.id?13:12,fontWeight:tab===tb.id?500:300,cursor:"pointer",transition:"all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",whiteSpace:"nowrap",letterSpacing:"0.02em",minWidth:0}}>{tb.label}</button>))}</div>
+    <div style={{display:"flex",padding:"0 8px",overflowX:"auto"}}>{tabs.map(tb=>(<button key={tb.id} onClick={()=>setTab(tb.id)} style={{flex:"1 0 auto",padding:"12px 10px 14px",border:"none",background:"none",borderBottom:tab===tb.id?"1px solid "+T.text:"1px solid transparent",color:tab===tb.id?T.text:T.textDim,fontFamily:F.serif,fontSize:tab===tb.id?13:12,fontWeight:700,textTransform:"uppercase",cursor:"pointer",transition:"all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",whiteSpace:"nowrap",letterSpacing:"0.02em",minWidth:0}}>{tb.label}</button>))}</div>
   </div>);
 }
 
@@ -327,7 +326,7 @@ function WardrobeTab({items,onDelete,onUpdate,weather,calendar,hideSeasonal,setH
       </div>}
       <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t("Търси по име, марка, таг...")} style={{width:"100%",padding:"12px 18px",borderRadius:100,border:"1px solid "+T.pillBorder,fontSize:12,fontFamily:F.sans,color:T.text,background:T.pillBg,boxSizing:"border-box",marginBottom:14}}/>
       <div style={{display:"flex",gap:6,overflowX:"auto",paddingBottom:12}}>
-        <Pill active={filter==="all"} onClick={()=>setFilter("all")}>{t("Всички")} {displayItems.length}</Pill>
+        <Pill active={filter==="all"} onClick={()=>setFilter("all")}>{t("Всички")}</Pill>
         <Pill active={filter==="favorites"} onClick={()=>setFilter("favorites")}>{t("Любими")}</Pill>
         <Pill active={filter==="capsule"} onClick={()=>setFilter("capsule")}>{t("Капсула")}</Pill>
         {laundryCount>0&&<Pill active={filter==="laundry"} onClick={()=>setFilter("laundry")}>{t("Пералня")} {laundryCount}</Pill>}
@@ -591,7 +590,7 @@ function ProfileTab(){
       {editBio?<div><textarea value={bioVal} onChange={e=>setBioVal(e.target.value)} rows={3} style={{...inputSt,resize:"none",marginBottom:8}} placeholder={t("Разкажи за стила си...")}/><button onClick={()=>{saveProfile({bio:bioVal});setEditBio(false);toast(t("Запазено"),"success");}} style={{padding:"8px 16px",borderRadius:2,border:"1px solid "+T.text,background:"transparent",color:T.text,fontFamily:F.mono,fontSize:11,cursor:"pointer"}}>{t("ЗАПАЗИ")}</button></div>:
       <p onClick={()=>setEditBio(true)} style={{fontFamily:F.sans,fontSize:12,color:profile.bio?T.textSoft:T.textDim,margin:0,cursor:"pointer",lineHeight:1.6}}>{profile.bio||t("Натисни за да добавиш био...")}</p>}
     </Section>
-    <Section title="СТИЛ">
+    <Section title={t("СТИЛ")}>
       <div style={{display:"flex",flexWrap:"wrap",gap:5,marginBottom:14}}>{STYLES.map((s,i)=>{const id=STYLE_IDS[i];const active=profile.preferredStyles?.includes(id);return<Pill key={i} active={active} onClick={()=>{const cur=profile.preferredStyles||[];saveProfile({preferredStyles:active?cur.filter(x=>x!==id):[...cur,id]});}} small>{s}</Pill>})}</div>
       <Row label={t("Горнище")} value={profile.topSize} field="topSize"/>
       <Row label={t("Долнище")} value={profile.bottomSize} field="bottomSize"/>
@@ -603,15 +602,15 @@ function ProfileTab(){
       <Toggle label={t("Седмичен отчет")} value={settings.notifyWeeklyReport} onChange={v=>saveSettings({notifyWeeklyReport:v})}/>
       <Toggle label={t("Публичен гардероб")} value={profile.isPublic} onChange={v=>saveProfile({isPublic:v})}/>
       <div style={{padding:"12px 0",borderBottom:"1px solid "+T.border}}>
-        <p style={{fontFamily:F.mono,fontSize:11,color:T.textDim,letterSpacing:"0.12em",marginBottom:8}}>ВАЛУТА</p>
+        <p style={{fontFamily:F.mono,fontSize:11,color:T.textDim,letterSpacing:"0.12em",marginBottom:8}}>{t("ВАЛУТА")}</p>
+        <div style={{display:"flex",gap:6}}>{[{id:"EUR",label:"€ (EUR)"},{id:"USD",label:"$ (USD)"}].map(c=><Pill key={c.id} active={(settings.currency||"EUR")===c.id} onClick={()=>{saveSettings({currency:c.id});toast(t("Валута: ")+c.label);}} small>{c.label}</Pill>)}</div>
       </div>
       <div style={{padding:"12px 0",borderBottom:"1px solid "+T.border}}>
-        <p style={{fontFamily:F.mono,fontSize:11,color:T.textDim,letterSpacing:"0.12em",marginBottom:8}}>ЕЗИК</p>
+        <p style={{fontFamily:F.mono,fontSize:11,color:T.textDim,letterSpacing:"0.12em",marginBottom:8}}>{t("ЕЗИК")}</p>
         <div style={{display:"flex",gap:6}}>{[{id:"bg",label:"Български"},{id:"en",label:"English"}].map(l=><Pill key={l.id} active={(settings.language||"bg")===l.id} onClick={()=>{saveSettings({language:l.id});toast("Language: "+l.label);}} small>{l.label}</Pill>)}</div>
       </div>
     </Section>
     <Section title={t("АКАУНТ")}>
-      <button onClick={handleExport} style={{width:"100%",padding:13,borderRadius:2,border:"1px solid "+T.border,background:"transparent",fontFamily:F.mono,fontSize:11,color:T.textMuted,cursor:"pointer",letterSpacing:"0.06em",marginBottom:8}}>{t("ЕКСПОРТИРАЙ ДАННИ (JSON)")}</button>
       <button onClick={()=>confirm(t("Искаш ли да излезеш от акаунта?"),()=>logout())} style={{width:"100%",padding:13,borderRadius:2,border:"1px solid "+T.border,background:"transparent",fontFamily:F.mono,fontSize:11,color:T.textMuted,cursor:"pointer",letterSpacing:"0.06em",marginBottom:8}}>{t("ИЗЛЕЗ")}</button>
       {!showDelete?<button onClick={()=>setShowDelete(true)} style={{width:"100%",padding:13,borderRadius:2,border:"1px solid "+T.danger,background:"transparent",fontFamily:F.mono,fontSize:11,color:T.dangerText,cursor:"pointer",letterSpacing:"0.06em"}}>{t("ИЗТРИЙ АКАУНТ")}</button>:
       <div style={{border:"1px solid "+T.danger,borderRadius:3,padding:16}}>
@@ -621,7 +620,7 @@ function ProfileTab(){
         <button onClick={handleDelete} disabled={!isGoogle&&!delPass} style={{flex:1,padding:12,borderRadius:2,border:"none",background:T.dangerText,color:"#fff",fontFamily:F.mono,fontSize:11,cursor:"pointer",opacity:busy?0.5:1}}>{t("ИЗТРИЙ")}</button></div>
       </div>}
     </Section>
-    <p style={{fontFamily:F.mono,fontSize:10,color:T.textDim,textAlign:"center",letterSpacing:"0.08em",marginTop:20}}>DRESHNIK.BG v8 · MADE IN BULGARIA 🇧🇬</p>
+    <p style={{fontFamily:F.mono,fontSize:10,color:T.textDim,textAlign:"center",letterSpacing:"0.08em",marginTop:20}}>{t("Създадено от Алекс Тодоров за ВАС!")}</p>
   </div>);
 }
 

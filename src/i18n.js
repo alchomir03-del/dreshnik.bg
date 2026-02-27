@@ -274,6 +274,7 @@ const translations = {
   "Задай име": { en: "Set name" },
   "ПОТВЪРДИ": { en: "CONFIRM" },
   "Валута: ": { en: "Currency: " },
+  "Създадено от Алекс Тодоров за ВАС!": { en: "Created by Alex Todorov for YOU!" },
 
   // === Weather ===
   "Ясно": { en: "Clear" },
