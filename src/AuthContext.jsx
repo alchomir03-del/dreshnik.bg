@@ -96,8 +96,16 @@ export function AuthProvider({ children }) {
       const pSnap = await getDoc(doc(db, "users", uid));
       if (pSnap.exists()) {
         const data = pSnap.data();
-        setProfile(p => ({ ...DEFAULT_PROFILE, ...data.profile }));
-        setSettings(s => ({ ...DEFAULT_SETTINGS, ...data.settings }));
+        // Filter out undefined/null values before merging
+        const cleanProfile = data.profile ? Object.fromEntries(Object.entries(data.profile).filter(([,v]) => v !== undefined)) : {};
+        const cleanSettings = data.settings ? Object.fromEntries(Object.entries(data.settings).filter(([,v]) => v !== undefined)) : {};
+        const mergedProfile = { ...DEFAULT_PROFILE, ...cleanProfile };
+        const mergedSettings = { ...DEFAULT_SETTINGS, ...cleanSettings };
+        setProfile(mergedProfile);
+        setSettings(mergedSettings);
+        profileRef.current = mergedProfile;
+        settingsRef.current = mergedSettings;
+        console.log("[loadUserData] settings:", mergedSettings);
       }
     } catch (e) {
       console.warn("Load user data:", e);
@@ -129,8 +137,11 @@ export function AuthProvider({ children }) {
 
   // ---- Save settings to Firestore ----
   const saveSettings = useCallback(async (updates) => {
+    console.log("[saveSettings] called with:", updates, "user:", !!user);
     if (!user) return;
-    const merged = { ...settingsRef.current, ...updates };
+    const current = settingsRef.current || {};
+    const merged = { ...current, ...updates };
+    console.log("[saveSettings] merged:", merged);
     setSettings(merged);
     settingsRef.current = merged;
     try {
@@ -139,6 +150,7 @@ export function AuthProvider({ children }) {
         settings: merged,
         updatedAt: new Date().toISOString(),
       }, { merge: true });
+      console.log("[saveSettings] saved to Firestore OK");
     } catch (e) {
       console.warn("Save settings:", e);
     }

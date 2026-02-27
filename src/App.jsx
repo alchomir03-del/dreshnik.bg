@@ -531,11 +531,11 @@ function ProfileTab(){
       <Toggle label="Публичен гардероб" value={profile.isPublic} onChange={v=>saveProfile({isPublic:v})}/>
       <div style={{padding:"12px 0",borderBottom:"1px solid "+T.border}}>
         <p style={{fontFamily:F.mono,fontSize:11,color:T.textDim,letterSpacing:"0.12em",marginBottom:8}}>ВАЛУТА</p>
-        <div style={{display:"flex",gap:6}}>{["лв","€","$","£"].map(c=><Pill key={c} active={settings.currency===c} onClick={()=>{saveSettings({currency:c});toast("Валута: "+c,"success");}} small>{c}</Pill>)}</div>
+        <div style={{display:"flex",gap:6}}>{["лв","€","$","£"].map(c=><Pill key={c} active={settings.currency===c} onClick={()=>{console.log("[Currency] clicking:",c,"current:",settings.currency);saveSettings({currency:c});toast("Валута: "+c);}} small>{c}</Pill>)}</div>
       </div>
       <div style={{padding:"12px 0",borderBottom:"1px solid "+T.border}}>
         <p style={{fontFamily:F.mono,fontSize:11,color:T.textDim,letterSpacing:"0.12em",marginBottom:8}}>ЕЗИК</p>
-        <div style={{display:"flex",gap:6}}>{[{id:"bg",label:"Български"},{id:"en",label:"English"}].map(l=><Pill key={l.id} active={(settings.language||"bg")===l.id} onClick={()=>{saveSettings({language:l.id});toast("Език: "+l.label,"success");}} small>{l.label}</Pill>)}</div>
+        <div style={{display:"flex",gap:6}}>{[{id:"bg",label:"Български"},{id:"en",label:"English"}].map(l=><Pill key={l.id} active={(settings.language||"bg")===l.id} onClick={()=>{console.log("[Language] clicking:",l.id,"current:",settings.language);saveSettings({language:l.id});toast("Език: "+l.label);}} small>{l.label}</Pill>)}</div>
       </div>
     </Section>
     <Section title="АКАУНТ">
