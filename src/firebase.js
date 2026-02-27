@@ -15,12 +15,13 @@ import { getStorage } from "firebase/storage";
 // ============================================================
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID",
+  apiKey: "AIzaSyDWqEytOr6dpTEHaak7u8Pmy8Bpk-bgx5Q",
+  authDomain: "dreshnikbg.firebaseapp.com",
+  projectId: "dreshnikbg",
+  storageBucket: "dreshnikbg.firebasestorage.app",
+  messagingSenderId: "711316703348",
+  appId: "1:711316703348:web:f99ab50a8a061c9de26921",
+  measurementId: "G-RJ8MGBQVVG",
 };
 
 const app = initializeApp(firebaseConfig);
