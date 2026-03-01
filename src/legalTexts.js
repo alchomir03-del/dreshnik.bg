@@ -16,7 +16,7 @@ export function getTermsOfService(lang) {
 // ============================================================
 const PRIVACY_BG = {
   title: "Политика за поверителност",
-  lastUpdated: "Последна актуализация: 28 февруари 2026 г.",
+  lastUpdated: "Последна актуализация: 1 март 2026 г.",
   sections: [
     {
       heading: "1. Какви данни събираме",
@@ -28,6 +28,8 @@ const PRIVACY_BG = {
         "• Запазени визии — комбинации от дрехи, които си запазил/а.",
         "• Календар на носенията — дати, на които си отбелязал/а носени дрехи.",
         "• Настройки — предпочитан език, тема (тъмна/светла), валута, размери.",
+        "• Камера — ако дадеш разрешение, приложението използва камерата на устройството ти за снимане на дрехи. Видеопотокът се обработва изцяло локално на устройството ти и НЕ се изпраща на сървър.",
+        "• Геолокация — ако дадеш разрешение, използваме GPS координатите ти за извличане на данни за времето от Open-Meteo и за определяне на града чрез OpenStreetMap Nominatim.",
       ],
     },
     {
@@ -44,7 +46,8 @@ const PRIVACY_BG = {
     {
       heading: "3. Снимки на дрехи",
       paragraphs: [
-        "Снимките, които качваш, се компресират до максимум 500×500 пиксела в JPEG формат с цел оптимизация на размера.",
+        "Снимките, които качваш, се компресират до максимум 1000×1000 пиксела в JPEG формат с цел оптимизация на размера.",
+        "При качване на снимка, приложението автоматично премахва фона с помощта на библиотеката @imgly/background-removal. Тази обработка се извършва изцяло на твоето устройство (client-side) — снимките НЕ се изпращат към външни сървъри за обработка. Библиотеката изтегля ML модел (~40 MB) от CDN на IMG.LY (staticimgly.com), който се кешира в браузъра за следващи употреби.",
         "Снимките се съхраняват в Firebase Storage и са достъпни само за теб чрез твоя акаунт.",
         "НЕ използваме снимките ти за рекламни, маркетингови или други цели извън предоставяне на услугата.",
         "При изтриване на артикул или акаунт, снимките се изтриват безвъзвратно от сървърите.",
@@ -65,7 +68,7 @@ const PRIVACY_BG = {
       heading: "5. Бисквитки и локално съхранение",
       paragraphs: [
         "DRESHNIK.bg НЕ използва бисквитки за проследяване или реклама.",
-        "Използваме localStorage на браузъра за временно съхранение на тема и данни, когато не си влязъл/а в акаунт. Тези данни остават само на твоето устройство.",
+        "Използваме localStorage на браузъра за съхранение на тема, артикули от гардероба, визии, календар и настройки, когато не си влязъл/а в акаунт. Тези данни остават само на твоето устройство.",
         "Firebase Authentication използва IndexedDB за поддържане на сесия. Това е строго необходимо за работата на приложението и не изисква отделно съгласие.",
       ],
     },
@@ -75,7 +78,9 @@ const PRIVACY_BG = {
         "DRESHNIK.bg използва следните външни услуги:",
         "• Google Firebase — съхранение на данни, автентикация и хостинг на файлове.",
         "• Google Fonts — зареждане на шрифтове (Playfair Display, Syne, JetBrains Mono).",
-        "• Open-Meteo — данни за времето. Заявките са анонимни и не съдържат лични данни.",
+        "• Open-Meteo — данни за времето. Заявките съдържат GPS координати за определяне на местната прогноза.",
+        "• OpenStreetMap Nominatim — обратно геокодиране за определяне на името на града по GPS координати. Заявките не съдържат лични идентификатори.",
+        "• IMG.LY (staticimgly.com) — CDN за изтегляне на ML модел за премахване на фон. Не се изпращат снимки или лични данни.",
         "• Vercel — хостинг на уебсайта.",
         "Не продаваме, не отдаваме и не споделяме личните ти данни с трети страни за маркетингови цели.",
       ],
@@ -104,7 +109,7 @@ const PRIVACY_BG = {
 // ============================================================
 const PRIVACY_EN = {
   title: "Privacy Policy",
-  lastUpdated: "Last updated: February 28, 2026",
+  lastUpdated: "Last updated: March 1, 2026",
   sections: [
     {
       heading: "1. What Data We Collect",
@@ -116,6 +121,8 @@ const PRIVACY_EN = {
         "• Saved outfits — clothing combinations you have saved.",
         "• Wear calendar — dates when you marked items as worn.",
         "• Settings — preferred language, theme (dark/light), currency, sizes.",
+        "• Camera — if you grant permission, the app uses your device camera to photograph clothing items. The video stream is processed entirely on your device and is NOT sent to any server.",
+        "• Geolocation — if you grant permission, we use your GPS coordinates to retrieve weather data from Open-Meteo and to determine your city via OpenStreetMap Nominatim.",
       ],
     },
     {
@@ -132,7 +139,8 @@ const PRIVACY_EN = {
     {
       heading: "3. Clothing Photos",
       paragraphs: [
-        "Photos you upload are compressed to a maximum of 500×500 pixels in JPEG format for size optimization.",
+        "Photos you upload are compressed to a maximum of 1000×1000 pixels in JPEG format for size optimization.",
+        "When you upload a photo, the app automatically removes the background using the @imgly/background-removal library. This processing happens entirely on your device (client-side) — photos are NOT sent to external servers for processing. The library downloads an ML model (~40 MB) from IMG.LY's CDN (staticimgly.com), which is cached in your browser for future use.",
         "Photos are stored in Firebase Storage and are accessible only to you through your account.",
         "We do NOT use your photos for advertising, marketing, or any purposes beyond providing the service.",
         "When you delete an item or your account, photos are permanently deleted from the servers.",
@@ -153,7 +161,7 @@ const PRIVACY_EN = {
       heading: "5. Cookies and Local Storage",
       paragraphs: [
         "DRESHNIK.bg does NOT use tracking or advertising cookies.",
-        "We use browser localStorage for temporary storage of theme and data when you are not logged in. This data remains only on your device.",
+        "We use browser localStorage for storing theme, wardrobe items, outfits, calendar, and settings when you are not logged in. This data remains only on your device.",
         "Firebase Authentication uses IndexedDB for session persistence. This is strictly necessary for the application to function and does not require separate consent.",
       ],
     },
@@ -163,7 +171,9 @@ const PRIVACY_EN = {
         "DRESHNIK.bg uses the following external services:",
         "• Google Firebase — data storage, authentication, and file hosting.",
         "• Google Fonts — font loading (Playfair Display, Syne, JetBrains Mono).",
-        "• Open-Meteo — weather data. Requests are anonymous and contain no personal data.",
+        "• Open-Meteo — weather data. Requests contain GPS coordinates to determine local weather.",
+        "• OpenStreetMap Nominatim — reverse geocoding to determine city name from GPS coordinates. Requests contain no personal identifiers.",
+        "• IMG.LY (staticimgly.com) — CDN for downloading the ML model for background removal. No photos or personal data are sent.",
         "• Vercel — website hosting.",
         "We do not sell, rent, or share your personal data with third parties for marketing purposes.",
       ],
@@ -192,7 +202,7 @@ const PRIVACY_EN = {
 // ============================================================
 const TERMS_BG = {
   title: "Общи условия за ползване",
-  lastUpdated: "Последна актуализация: 28 февруари 2026 г.",
+  lastUpdated: "Последна актуализация: 1 март 2026 г.",
   sections: [
     {
       heading: "1. Общи положения",
@@ -284,7 +294,7 @@ const TERMS_BG = {
 // ============================================================
 const TERMS_EN = {
   title: "Terms of Service",
-  lastUpdated: "Last updated: February 28, 2026",
+  lastUpdated: "Last updated: March 1, 2026",
   sections: [
     {
       heading: "1. General",

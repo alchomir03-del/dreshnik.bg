@@ -29,7 +29,7 @@ const CATEGORIES=[
 const CAT_MAP=Object.fromEntries(CATEGORIES.map(c=>[c.id,c]));
 const STYLES=["Casual","Smart Casual","Formal","Sport","Streetwear","Classic","Elegant","Minimal","Bohemian","Techwear"];
 const STYLE_IDS=STYLES.map(s=>s.toLowerCase().replace(" ","_"));
-const SEASONS=[{id:"spring",label:"Пролет"},{id:"summer",label:"Лято"},{id:"autumn",label:"Есен"},{id:"winter",label:"Зима"},{id:"all",label:"Всички сезони"}];
+const SEASONS=[{id:"spring",label:"Пролет"},{id:"summer",label:"Лято"},{id:"autumn",label:"Есен"},{id:"winter",label:"Зима"}];
 const OCCASIONS=[
   {id:"everyday",label:"Ежедневно",styles:[0,1,4,7]},{id:"work",label:"Работа",styles:[1,2,5,7]},
   {id:"date",label:"Среща",styles:[1,6,5,7]},{id:"sport",label:"Спорт",styles:[3,9]},
@@ -37,15 +37,32 @@ const OCCASIONS=[
   {id:"travel",label:"Пътуване",styles:[0,1,9,7]},{id:"creative",label:"Креативно",styles:[4,8,9]},
 ];
 const COLORS=[
-  ["#000000","Черно"],["#FFFFFF","Бяло"],["#6B6B6B","Сиво"],["#A8A8A8","Сребро"],
-  ["#1C1C2E","Тъмно синьо"],["#2563EB","Синьо"],["#7DD3FC","Небесно"],["#1E3A2F","Тъмнозелено"],
-  ["#4ADE80","Изумруд"],["#B8D4A3","Мента"],["#DC2626","Червено"],["#F97316","Оранжево"],
-  ["#EAB308","Злато"],["#7C3AED","Виолетово"],["#EC4899","Розово"],["#92400E","Кафяво"],
-  ["#D2B48C","Бежово"],["#F5F0E8","Кремаво"],["#C0A27A","Каки"],["#800020","Бордо"],
-  ["#C9B8A8","Топло сиво"],["#2F4F4F","Графит"],["#FFD700","Горчица"],["#8B4513","Коняк"],
+  // Neutrals
+  ["#000000","Черно"],["#1A1A1A","Антрацит"],["#333333","Тъмно сиво"],["#6B6B6B","Сиво"],
+  ["#A8A8A8","Сребро"],["#D4D4D4","Светло сиво"],["#F5F0E8","Кремаво"],["#FFFFFF","Бяло"],
+  // Browns & earth tones
+  ["#2C1810","Тъмно кафяво"],["#5C3317","Шоколад"],["#8B4513","Коняк"],["#92400E","Кафяво"],
+  ["#A0522D","Сиена"],["#C0A27A","Каки"],["#D2B48C","Бежово"],["#C9B8A8","Топло сиво"],
+  // Reds & pinks
+  ["#800020","Бордо"],["#8B0000","Тъмно червено"],["#DC2626","Червено"],["#E85D75","Корал"],
+  ["#EC4899","Розово"],["#F9A8D4","Светло розово"],["#FFC0CB","Пудра"],["#F5E6CC","Праскова"],
+  // Oranges & yellows
+  ["#CC5500","Ръжда"],["#F97316","Оранжево"],["#FB923C","Мандарина"],["#FFD700","Горчица"],
+  ["#EAB308","Злато"],["#FDE047","Жълто"],["#FEFCE8","Ванилия"],
+  // Greens
+  ["#1E3A2F","Тъмнозелено"],["#15803D","Горски"],["#22C55E","Изумруд"],["#4ADE80","Зелено"],
+  ["#86EFAC","Мента"],["#B8D4A3","Градина"],["#808000","Маслина"],
+  // Blues
+  ["#1C1C2E","Тъмно синьо"],["#1E3A5F","Полунощно"],["#1D4ED8","Кобалт"],["#2563EB","Синьо"],
+  ["#3B82F6","Кралско"],["#60A5FA","Стомана"],["#7DD3FC","Небесно"],["#BAE6FD","Бебешко"],
+  // Purples & violets
+  ["#4C1D95","Индиго"],["#7C3AED","Виолетово"],["#A855F7","Лилаво"],["#C084FC","Лавандула"],
+  // Special
+  ["#2F4F4F","Графит"],["#556B2F","Милитъри"],["#4A6741","Градско зелено"],["#708090","Стоманеносиво"],
+  ["#36454F","Въглен"],["#E8D5B7","Пясък"],
 ];
-const MATERIALS=["Памук","Лен","Коприна","Вълна","Кашмир","Деним","Кожа","Велур","Полиестер","Найлон","Кадифе","Кордюрой","Трико","Флийс","Gore-Tex"];
-const BRANDS=["Nike","Adidas","Zara","H&M","Uniqlo","COS","Massimo Dutti","Ralph Lauren","Tommy Hilfiger","Calvin Klein","Hugo Boss","Levi's","New Balance","Converse","Друг"];
+const MATERIALS=["Памук","Лен","Коприна","Вълна","Кашмир","Деним","Кожа","Велур","Полиестер","Найлон","Кадифе","Кордюрой","Трико","Флийс","Gore-Tex","Сатен","Муселин","Модал","Неопрен","Текстил"];
+const BRANDS=["Nike","Adidas","Zara","H&M","Uniqlo","COS","Massimo Dutti","Ralph Lauren","Tommy Hilfiger","Calvin Klein","Hugo Boss","Levi's","New Balance","Converse","Puma","ASOS","Mango","Bershka","Pull&Bear","Stradivarius","Reserved","LC Waikiki","Lacoste","Guess","Друг"];
 const F={serif:"'Cormorant Garamond',Georgia,serif",sans:"'Syne','Helvetica Neue',sans-serif",mono:"'JetBrains Mono','SF Mono',monospace"};
 
 // === Themes ===
@@ -98,7 +115,8 @@ function hexToHSL(hex){let r=parseInt(hex.slice(1,3),16)/255,g=parseInt(hex.slic
 function isNeutral(hex){const h=hexToHSL(hex);return h.s<15||h.l>90||h.l<10;}
 function colorCompat(a,b){if(isNeutral(a)||isNeutral(b))return 0.9;const h1=hexToHSL(a),h2=hexToHSL(b),d=Math.min(Math.abs(h1.h-h2.h),360-Math.abs(h1.h-h2.h));if(d>=150)return 0.85;if(d<=30)return 0.8;if(d>=110&&d<=130)return 0.75;if(d>=40&&d<=80)return 0.3;return 0.5;}
 function getCurrentSeason(){const m=new Date().getMonth();if(m<=1||m===11)return"winter";if(m<=4)return"spring";if(m<=7)return"summer";return"autumn";}
-function getSeasonalItems(items,hide){if(!hide)return items;const cs=getCurrentSeason(),comp={winter:["winter","autumn","all"],summer:["summer","spring","all"],spring:["spring","summer","all"],autumn:["autumn","winter","all"]};return items.filter(i=>!i.season||comp[cs]?.includes(i.season));}
+function normSeason(s){if(!s)return[];if(Array.isArray(s))return s;if(s==="all")return["spring","summer","autumn","winter"];return[s];}
+function getSeasonalItems(items,hide){if(!hide)return items;const cs=getCurrentSeason(),comp={winter:["winter","autumn"],summer:["summer","spring"],spring:["spring","summer"],autumn:["autumn","winter"]};return items.filter(i=>{const ss=normSeason(i.season);if(!ss.length)return true;return ss.some(s=>comp[cs]?.includes(s));});}
 function getColorName(hex){const c=COLORS.find(x=>x[0]===hex);return c?c[1]:hex;}
 
 // === Scoring ===
@@ -107,10 +125,10 @@ function scoreOutfit(combo,occIdx,weather,blSet){
   let s=0;const occ=OCCASIONS[occIdx];
   combo.forEach(i=>{const sIdx=STYLE_IDS.indexOf(i.style);if(occ&&occ.styles.includes(sIdx))s+=25;else s+=5;});
   for(let i=0;i<combo.length;i++)for(let j=i+1;j<combo.length;j++){const c1=combo[i].colors?.[0],c2=combo[j].colors?.[0];if(c1&&c2)s+=colorCompat(c1,c2)*30;}
-  const cs=getCurrentSeason();combo.forEach(i=>{if(i.season==="all"||i.season===cs)s+=12;});
+  const cs=getCurrentSeason();combo.forEach(i=>{const ss=normSeason(i.season);if(ss.length===4||ss.includes(cs))s+=12;});
   const n=combo.filter(i=>i.colors?.[0]&&isNeutral(i.colors[0])).length;if(n>=1&&n<combo.length)s+=15;
   combo.forEach(i=>{if((i.wearCount||0)<3)s+=5;});
-  if(weather){if(weather.temp<10)combo.forEach(i=>{if(i.category==="outerwear")s+=10;if(i.season==="winter")s+=5;});if(weather.temp>25)combo.forEach(i=>{if(i.season==="summer")s+=8;});if(weather.rain)combo.forEach(i=>{if(["Gore-Tex","Найлон","Nylon"].includes(i.material))s+=8;if(["Велур","Suede","Коприна","Silk"].includes(i.material))s-=5;});}
+  if(weather){if(weather.temp<10)combo.forEach(i=>{if(i.category==="outerwear")s+=10;const ss=normSeason(i.season);if(ss.includes("winter"))s+=5;});if(weather.temp>25)combo.forEach(i=>{const ss=normSeason(i.season);if(ss.includes("summer"))s+=8;});if(weather.rain)combo.forEach(i=>{if(["Gore-Tex","Найлон","Nylon"].includes(i.material))s+=8;if(["Велур","Suede","Коприна","Silk"].includes(i.material))s-=5;});}
   return s;
 }
 function generateCombos(items,occId,count,weather,blacklist){
@@ -129,15 +147,16 @@ function generateCombos(items,occId,count,weather,blacklist){
   // If score filter is too strict, return top combos anyway
   if(res.length===0&&combos.length>0){const seen2=new Set();for(const c of combos){const k=c.items.map(i=>i.id).sort().join(",");if(!seen2.has(k)){seen2.add(k);res.push(c);if(res.length>=count)break;}}}return res;
 }
-function getExplanation(combo,occ){
+function getExplanation(combo,occ,tr){
   const neutrals=combo.items.filter(i=>i.colors?.[0]&&isNeutral(i.colors[0])),accents=combo.items.filter(i=>i.colors?.[0]&&!isNeutral(i.colors[0]));
-  let t="";if(neutrals.length>0&&accents.length>0)t+="Неутрална база: "+neutrals.map(n=>n.name).join(" + ")+" с акцент: "+accents.map(a=>a.name).join(", ")+". ";
-  else if(neutrals.length===combo.items.length)t+="Монохромна визия — чиста и уверена. ";
-  else t+="Смел цветови микс — "+combo.items.map(i=>i.name).join(" + ")+". ";
-  const o=OCCASIONS.find(x=>x.id===occ);if(o){const matching=combo.items.filter(i=>o.styles.includes(STYLE_IDS.indexOf(i.style)));if(matching.length===combo.items.length)t+="Перфектен мач за "+o.label+".";else if(matching.length>0)t+=matching.map(x=>x.name).join(" & ")+" задава тона.";}return t;
+  let txt="";if(neutrals.length>0&&accents.length>0)txt+=tr("Неутрална база")+": "+neutrals.map(n=>n.name).join(" + ")+" "+tr("с акцент")+": "+accents.map(a=>a.name).join(", ")+". ";
+  else if(neutrals.length===combo.items.length)txt+=tr("Монохромна визия — чиста и уверена.")+". ";
+  else txt+=tr("Смел цветови микс")+" — "+combo.items.map(i=>i.name).join(" + ")+". ";
+  const o=OCCASIONS.find(x=>x.id===occ);if(o){const matching=combo.items.filter(i=>o.styles.includes(STYLE_IDS.indexOf(i.style)));if(matching.length===combo.items.length)txt+=tr("Перфектен мач за")+" "+tr(o.label)+".";else if(matching.length>0)txt+=matching.map(x=>x.name).join(" & ")+" "+tr("задава тона")+".";}return txt;
 }
 const TIPS={everyday:["Навий ръкави за ефортлес стил.","Бели кецове заковават всяка визия.","Тъкни ризата от едната страна.","Добави верижка за акцент."],work:["Колан и обувки — същият цвят.","Инвестирай в тейлъринг.","Макс 3 цвята за авторитет.","Часовникът издига всичко."],date:["Едно statement парче е достатъчно.","Обувките правят първо впечатление.","Тъмни цветове = увереност.","Парфюмът завършва визията."],sport:["Само дишащи материи.","Монохром изглежда скъпо.","Сетовете изглеждат умишлено.","Чисти кецове — винаги."],formal:["Ризата трябва да е гладена.","Тъмни тонове излъчват авторитет.","Детайли — маншети, яка, копчета.","Кройката е всичко."],party:["Едно смело парче носи цялата визия.","Миксът от текстури добавя дълбочина.","Черното е винаги безопасно.","Аксесоарите правят разликата."],travel:["Слоестото обличане — твоят приятел.","Неутрална база, един поп цвят.","Устойчиви на гънки материи.","Комфорт на първо място."],creative:["Наруши правилата.","Миксирай неочаквани принтове.","Смелите цветове показват увереност.","Аксесоарите разказват историята ти."]};
-function getTip(occ){const l=TIPS[occ]||TIPS.everyday;return l[Math.floor(Math.random()*l.length)];}
+const TIPS_EN={everyday:["Roll up sleeves for effortless style.","White sneakers anchor any outfit.","Tuck the shirt on one side.","Add a chain for accent."],work:["Belt and shoes — same color.","Invest in tailoring.","Max 3 colors for authority.","A watch elevates everything."],date:["One statement piece is enough.","Shoes make the first impression.","Dark colors = confidence.","Fragrance completes the look."],sport:["Breathable fabrics only.","Monochrome looks expensive.","Matching sets look intentional.","Clean sneakers — always."],formal:["The shirt must be pressed.","Dark tones radiate authority.","Details — cuffs, collar, buttons.","The cut is everything."],party:["One bold piece carries the whole look.","Mixing textures adds depth.","Black is always safe.","Accessories make the difference."],travel:["Layering is your best friend.","Neutral base, one pop of color.","Wrinkle-resistant fabrics.","Comfort comes first."],creative:["Break the rules.","Mix unexpected prints.","Bold colors show confidence.","Accessories tell your story."]};
+function getTip(occ,lang){const l=((lang==="en"?TIPS_EN:TIPS)[occ]||(lang==="en"?TIPS_EN:TIPS).everyday);return l[Math.floor(Math.random()*l.length)];}
 
 // === Venue Recommendations ===
 const VENUES={
@@ -162,7 +181,7 @@ const VENUES_EN={
 };
 function getVenue(occ,lang){const list=(lang==="en"?VENUES_EN:VENUES)[occ]||(lang==="en"?VENUES_EN:VENUES).everyday;return list[Math.floor(Math.random()*list.length)];}
 function getAutoOccasion(){const h=new Date().getHours(),d=new Date().getDay();if(d===0)return"everyday";if(d===6)return h>=18?"party":"creative";if(d===5)return h>=18?"party":"everyday";if(h<12)return"work";if(h<17)return"everyday";return"date";}
-function getTimeLabel(lang){const h=new Date().getHours();if(lang==="en")return h<12?"THIS MORNING":h<17?"TODAY":"TONIGHT";return h<12?"ТАЗИ СУТРИН":h<17?"ДНЕС":"ТАЗИ ВЕЧЕР";}
+function getTimeLabel(tr){const h=new Date().getHours();return h<12?tr("ТАЗИ СУТРИН"):h<17?tr("ДНЕС"):tr("ТАЗИ ВЕЧЕР");}
 
 // === Calendar helpers ===
 const LAUNDRY_THRESHOLD=3;
@@ -178,7 +197,8 @@ function useWeather(){const[w,setW]=useState(weatherCache);useEffect(()=>{if(Dat
 // === Storage (sync, no fake async) ===
 function sGet(k){try{return JSON.parse(localStorage.getItem(k));}catch{return null;}}
 function sSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){console.warn("Storage:",e);}}
-function compress(d,m=500){return new Promise(r=>{const i=new Image();i.onload=()=>{const c=document.createElement("canvas"),s=Math.min(m/i.width,m/i.height,1);c.width=i.width*s;c.height=i.height*s;c.getContext("2d").drawImage(i,0,0,c.width,c.height);r(c.toDataURL("image/jpeg",0.65));};i.src=d;});}
+function compress(d,m=1000){return new Promise((r,rej)=>{const i=new Image();i.onload=()=>{const c=document.createElement("canvas"),s=Math.min(m/i.width,m/i.height,1);c.width=i.width*s;c.height=i.height*s;c.getContext("2d").drawImage(i,0,0,c.width,c.height);r(c.toDataURL("image/jpeg",0.82));};i.onerror=()=>rej(new Error("Image load failed"));i.src=d;});}
+async function removeBg(base64){try{const{removeBackground}=await import("@imgly/background-removal");const r=await fetch(base64);const blob=await r.blob();const result=await removeBackground(blob,{output:{format:"image/png",quality:1}});const img=new Image();const url=URL.createObjectURL(result);return new Promise((resolve)=>{img.onload=()=>{const c=document.createElement("canvas");c.width=img.width;c.height=img.height;const ctx=c.getContext("2d");ctx.fillStyle="#FFFFFF";ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(img,0,0);URL.revokeObjectURL(url);resolve(c.toDataURL("image/jpeg",0.88));};img.onerror=()=>{URL.revokeObjectURL(url);resolve(null);};img.src=url;});}catch(e){console.warn("BG removal failed:",e);return null;}}
 function dateKey(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
 function todayKey(){return dateKey(new Date());}
 function useCurrency(){return"€";}
@@ -187,55 +207,54 @@ function useCurrency(){return"€";}
 function Pill({children,active,onClick,small}){const T=useTheme();return(<button onClick={onClick} style={{padding:small?"6px 14px":"8px 18px",borderRadius:100,border:active?"1px solid "+T.text:"1px solid "+T.pillBorder,background:active?T.text:T.pillBg,color:active?T.bg:T.textMuted,fontFamily:F.serif,fontSize:small?12:13,fontWeight:active?500:300,cursor:"pointer",transition:"all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",whiteSpace:"nowrap",letterSpacing:"0.02em"}}>{children}</button>);}
 function Logo({size=28,animate,onClick}){const T=useTheme();const Tag=onClick?"button":"span";return(<Tag onClick={onClick} style={{fontFamily:F.serif,fontSize:size,color:T.text,animation:animate?"pulse 2s ease-in-out infinite":"none",letterSpacing:"-0.02em",background:"none",border:"none",padding:0,cursor:onClick?"pointer":"default",WebkitTapHighlightColor:"transparent",display:"inline-block"}}><span style={{fontWeight:500}}>DRESHNIK</span><span style={{fontWeight:300,color:T.textDim}}>.bg</span></Tag>);}
 function ColorBar({items}){const all=items.flatMap(i=>i.colors||[]);if(!all.length)return null;return(<div style={{display:"flex",height:2,borderRadius:1,overflow:"hidden",gap:2,opacity:0.85}}>{all.map((c,i)=><div key={i} style={{flex:1,background:c}}/>)}</div>);}
-function CompactDailyCard({weather,calendar,onGenerate}){
+function DailyCard({weather,calendar,items,onGenerate}){
   const T=useTheme(),t=useT();const{settings}=useAuth()||{};const lang=settings?.language||"bg";
-  const[expanded,setExpanded]=useState(false);
   const[venue,setVenue]=useState(()=>getVenue(getAutoOccasion(),lang));
+  const combo=useMemo(()=>{if(!items||items.length<2)return null;const avail=items.filter(i=>!i.inLaundry);const combos=generateCombos(avail,"everyday",1,weather);return combos.length>0?combos[0]:null;},[items,weather]);
   const tmrEvents=useMemo(()=>{const d=new Date();d.setDate(d.getDate()+1);const dk=dateKey(d);const raw=calendar?.[dk];if(!raw)return[];return normCal(raw).events;},[calendar]);
-  const dayAbbrs=lang==="en"?["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]:["Нд","Пн","Вт","Ср","Чт","Пт","Сб"];
-  const dayAbbr=dayAbbrs[new Date().getDay()].toUpperCase();
   const fullDayNames=lang==="en"?["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]:["Неделя","Понеделник","Вторник","Сряда","Четвъртък","Петък","Събота"];
   const dayName=fullDayNames[new Date().getDay()].toUpperCase();
   const cityName=weather?.city?.toUpperCase()||"";
-  const refresh=(e)=>{e.stopPropagation();setVenue(getVenue(getAutoOccasion(),lang));};
+  const refresh=()=>{setVenue(getVenue(getAutoOccasion(),lang));};
+  const wornToday=calendar?.[todayKey()];
   return(<div style={{margin:"14px 14px 0",background:T.card||T.subtleBg,border:"1px solid "+(T.borderLight||T.border),borderRadius:4,overflow:"hidden"}}>
-    <div onClick={()=>setExpanded(p=>!p)} style={{padding:"10px 20px",display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer",WebkitTapHighlightColor:"transparent",minHeight:40,boxSizing:"border-box"}}>
-      <div style={{display:"flex",alignItems:"center",gap:12}}>
-        {weather&&<span style={{fontFamily:F.mono,fontSize:14,color:T.text,fontWeight:400}}>{weather.temp}{"\u00B0"}</span>}
-        <span style={{fontFamily:F.mono,fontSize:10,color:T.textMuted,letterSpacing:"0.06em",textTransform:"uppercase"}}>{venue.type}</span>
-        {tmrEvents.length>0&&<span style={{fontFamily:F.mono,fontSize:8,color:T.eventText,letterSpacing:"0.1em",border:"1px solid "+T.eventAccent,borderRadius:2,padding:"2px 6px",lineHeight:1}}>{t("УТРЕ")}</span>}
+    {/* Weather + Day header */}
+    <div style={{padding:"14px 20px 16px"}}>
+      <p style={{fontFamily:F.mono,fontSize:10,color:T.textDim,letterSpacing:"0.16em",margin:"0 0 14px"}}>{dayName}{cityName?(" · "+cityName):""}</p>
+      {weather&&<><div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline"}}>
+        <span style={{fontFamily:F.mono,fontSize:28,color:T.text,fontWeight:400}}>{weather.temp}{"\u00B0"}</span>
+        <span style={{fontFamily:F.sans,fontSize:13,color:T.textSoft}}>{t(weather.desc)}</span>
       </div>
-      <span style={{fontFamily:F.sans,fontSize:10,color:T.textDim,transition:"transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)",transform:expanded?"rotate(180deg)":"rotate(0deg)",display:"inline-block"}}>{"▾"}</span>
+      {weather.rainChance>0&&<p style={{fontFamily:F.mono,fontSize:10,color:T.textDim,margin:"6px 0 0",letterSpacing:"0.06em"}}>{t("ВЕРОЯТНОСТ ЗА ДЪЖД")} {weather.rainChance}%</p>}</>}
     </div>
-    <div style={{maxHeight:expanded?500:0,opacity:expanded?1:0,overflow:"hidden",transition:"max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease"}}>
-      <div style={{height:1,background:T.border,margin:"0 20px"}}/>
-      <div style={{padding:"14px 20px 16px"}}>
-        <p style={{fontFamily:F.mono,fontSize:10,color:T.textDim,letterSpacing:"0.16em",margin:"0 0 14px"}}>{dayName}{cityName?(" \u00B7 "+cityName):""}</p>
-        {weather&&<><div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline"}}>
-          <span style={{fontFamily:F.mono,fontSize:28,color:T.text,fontWeight:400}}>{weather.temp}{"\u00B0"}</span>
-          <span style={{fontFamily:F.sans,fontSize:13,color:T.textSoft}}>{t(weather.desc)}</span>
-        </div>
-        {weather.rainChance>0&&<p style={{fontFamily:F.mono,fontSize:10,color:T.textDim,margin:"6px 0 0",letterSpacing:"0.06em"}}>{t("ВЕРОЯТНОСТ ЗА ДЪЖД")} {weather.rainChance}%</p>}</>}
+    {/* Venue suggestion */}
+    <div style={{height:1,background:T.border,margin:"0 20px"}}/>
+    <div style={{padding:"14px 20px 16px",display:"flex",alignItems:"center",gap:12}}>
+      <div style={{flex:1}}>
+        <p style={{fontFamily:F.mono,fontSize:9,color:T.textDim,letterSpacing:"0.14em",margin:"0 0 5px"}}>{getTimeLabel(t)}</p>
+        <p style={{fontFamily:F.serif,fontSize:17,color:T.text,fontWeight:400,margin:"0 0 2px"}}>{venue.name}</p>
+        <p style={{fontFamily:F.mono,fontSize:10,color:T.textMuted,margin:0,letterSpacing:"0.06em",textTransform:"uppercase"}}>{venue.type}</p>
       </div>
-      <div style={{height:1,background:T.border,margin:"0 20px"}}/>
-      <div style={{padding:"14px 20px 16px",display:"flex",alignItems:"center",gap:12}}>
-        <div style={{flex:1}}>
-          <p style={{fontFamily:F.mono,fontSize:9,color:T.textDim,letterSpacing:"0.14em",margin:"0 0 5px"}}>{getTimeLabel(lang)}</p>
-          <p style={{fontFamily:F.serif,fontSize:17,color:T.text,fontWeight:400,margin:"0 0 2px"}}>{venue.name}</p>
-          <p style={{fontFamily:F.mono,fontSize:10,color:T.textMuted,margin:0,letterSpacing:"0.06em",textTransform:"uppercase"}}>{venue.type}</p>
-        </div>
-        <button onClick={refresh} style={{background:"none",border:"1px solid "+T.border,borderRadius:"50%",width:30,height:30,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,color:T.textDim,flexShrink:0,transition:"all 0.3s"}}>{"↻"}</button>
-      </div>
-      {tmrEvents.length>0&&<><div style={{height:1,background:T.border,margin:"0 20px"}}/>
-        <div style={{padding:"14px 18px",borderLeft:"3px solid "+T.eventAccent}}>
-          <p style={{fontFamily:F.mono,fontSize:9,color:T.eventText,letterSpacing:"0.16em",margin:"0 0 8px"}}>{t("УТРЕ")}</p>
-          {tmrEvents.map(evt=>{const occ=OCCASIONS.find(o=>o.id===evt.occasion);return<div key={evt.id} style={{marginBottom:tmrEvents.length>1?10:0}}>
-            <p style={{fontFamily:F.serif,fontSize:16,color:T.text,fontWeight:400,margin:"0 0 2px"}}>{occ?t(occ.label):evt.occasion}{evt.venue?" — "+evt.venue:""}</p>
-            {evt.note&&<p style={{fontFamily:F.sans,fontSize:12,color:T.textMuted,margin:"0 0 8px"}}>{evt.note}</p>}
-            <button onClick={(e)=>{e.stopPropagation();onGenerate(evt.occasion);}} style={{padding:"7px 14px",borderRadius:2,border:"1px solid "+T.eventAccent,background:"transparent",fontFamily:F.mono,fontSize:9,color:T.eventText,cursor:"pointer",letterSpacing:"0.08em"}}>{t("ПОДГОТВИ ВИЗИЯ")}</button>
-          </div>;})}
-        </div></>}
+      <button onClick={refresh} style={{background:"none",border:"1px solid "+T.border,borderRadius:"50%",width:30,height:30,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,color:T.textDim,flexShrink:0,transition:"all 0.3s"}}>{"↻"}</button>
     </div>
+    {/* Outfit of the day */}
+    {combo&&<><div style={{height:1,background:T.border,margin:"0 20px"}}/>
+    <div style={{padding:"14px 18px 14px"}}>
+      <p style={{fontFamily:F.mono,fontSize:9,color:T.textDim,letterSpacing:"0.16em",margin:"0 0 10px"}}>{t("ВИЗИЯ НА ДЕНЯ")}</p>
+      {wornToday?<p style={{fontFamily:F.serif,fontSize:15,color:T.textMuted,fontWeight:400,margin:0}}>{t("Вече отбеляза днешната визия")}</p>
+      :<div style={{display:"flex",gap:3,height:80}}>{combo.items.slice(0,4).map(item=><div key={item.id} style={{flex:1,borderRadius:3,overflow:"hidden",border:"1px solid "+T.border}}>{item.image?<img src={item.image} alt="" style={{width:"100%",height:"100%",objectFit:"cover",opacity:T.imgOpacity}}/>:<div style={{width:"100%",height:"100%",background:T.bg,display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{fontFamily:F.serif,fontSize:18,color:T.border}}>{CAT_MAP[item.category]?.label?.[0]}</span></div>}</div>)}</div>}
+      <ColorBar items={combo.items}/>
+    </div></>}
+    {/* Tomorrow events */}
+    {tmrEvents.length>0&&<><div style={{height:1,background:T.border,margin:"0 20px"}}/>
+      <div style={{padding:"14px 18px",borderLeft:"3px solid "+T.eventAccent}}>
+        <p style={{fontFamily:F.mono,fontSize:9,color:T.eventText,letterSpacing:"0.16em",margin:"0 0 8px"}}>{t("УТРЕ")}</p>
+        {tmrEvents.map(evt=>{const occ=OCCASIONS.find(o=>o.id===evt.occasion);return<div key={evt.id} style={{marginBottom:tmrEvents.length>1?10:0}}>
+          <p style={{fontFamily:F.serif,fontSize:16,color:T.text,fontWeight:400,margin:"0 0 2px"}}>{occ?t(occ.label):evt.occasion}{evt.venue?" — "+evt.venue:""}</p>
+          {evt.note&&<p style={{fontFamily:F.sans,fontSize:12,color:T.textMuted,margin:"0 0 8px"}}>{evt.note}</p>}
+          <button onClick={()=>onGenerate(evt.occasion)} style={{padding:"7px 14px",borderRadius:2,border:"1px solid "+T.eventAccent,background:"transparent",fontFamily:F.mono,fontSize:9,color:T.eventText,cursor:"pointer",letterSpacing:"0.08em"}}>{t("ПОДГОТВИ ВИЗИЯ")}</button>
+        </div>;})}
+      </div></>}
   </div>);
 }
 function EmptyState({icon,title,sub}){const T=useTheme();return(<div style={{textAlign:"center",padding:"60px 24px"}}>{icon&&<p style={{fontFamily:F.mono,fontSize:28,color:T.textDim,marginBottom:12,opacity:0.4}}>{icon}</p>}<p style={{fontFamily:F.serif,fontSize:22,color:T.text,fontWeight:300,marginBottom:8,letterSpacing:"-0.01em"}}>{title}</p><p style={{fontFamily:F.mono,fontSize:10,color:T.textDim,letterSpacing:"0.16em",textTransform:"uppercase"}}>{sub}</p></div>);}
@@ -263,7 +282,7 @@ function Header({theme,toggleTheme,onLogoClick}){
   return(<div style={{background:T.bg,borderBottom:"1px solid "+T.border,position:"sticky",top:0,zIndex:100,paddingTop:"env(safe-area-inset-top, 0px)"}}>
     <div style={{padding:"14px 22px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
       <Logo size={22} onClick={onLogoClick}/>
-      <button onClick={toggleTheme} style={{background:"none",border:"1px solid "+T.border,borderRadius:"50%",width:36,height:36,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,padding:0,color:T.textDim,transition:"all 0.3s"}}>{theme==="dark"?"☀":"☾"}</button>
+      <button onClick={toggleTheme} style={{background:"none",border:"1px solid "+T.border,borderRadius:"50%",width:36,height:36,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,padding:0,color:T.textDim,transition:"all 0.3s"}}>{theme==="dark"?"☼":"☾"}</button>
     </div>
   </div>);
 }
@@ -295,14 +314,14 @@ function BottomNav({tab,setTab}){
 
 // === ItemCard ===
 function ItemCard({item,onClick,onDoubleTap,idx=0}){
-  const T=useTheme(),cat=CAT_MAP[item.category],lastTap=useRef(0);
+  const T=useTheme(),t=useT(),cat=CAT_MAP[item.category],lastTap=useRef(0);
   const handleTap=()=>{const now=Date.now();if(now-lastTap.current<300){onDoubleTap?.(item.id);lastTap.current=0;}else{lastTap.current=now;setTimeout(()=>{if(lastTap.current!==0){onClick?.();lastTap.current=0;}},300);}};
   return(<div onClick={handleTap} style={{background:T.card,borderRadius:4,overflow:"hidden",cursor:"pointer",border:"1px solid "+T.border,opacity:item.inLaundry?0.4:1,transition:"all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",animation:"fadeInUp "+(0.12+idx*0.04)+"s ease both"}}>
     <div style={{position:"relative",paddingTop:"130%",background:T.surface}}>
       {item.image?<img src={item.image} alt="" loading="lazy" style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",objectFit:"cover",opacity:T.imgOpacity}}/>:
       <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"linear-gradient(145deg, "+(item.colors?.[0]||"#222")+"15 0%, "+T.bg+" 100%)"}}><div style={{width:36,height:36,borderRadius:"50%",background:item.colors?.[0]||"#222",opacity:0.4,border:item.colors?.[0]==="#000000"?"1px solid #222":"none"}}/></div>}
       <div style={{position:"absolute",bottom:0,left:0,right:0,height:60,background:"linear-gradient(0deg,"+T.cardOverlay+" 0%,transparent 100%)"}}/>
-      <span style={{position:"absolute",top:8,left:8,fontFamily:F.mono,fontSize:10,color:T.textDim,letterSpacing:"0.12em",textTransform:"uppercase"}}>{cat?.label}{item.inLaundry?" · ~":""}</span>
+      <span style={{position:"absolute",top:8,left:8,fontFamily:F.mono,fontSize:10,color:T.textDim,letterSpacing:"0.12em",textTransform:"uppercase"}}>{t(cat?.label||"")}{item.inLaundry?" · ~":""}</span>
       {item.favorite&&<span style={{position:"absolute",top:8,right:8,fontSize:11,color:T.textMuted}}>♥</span>}
       {item.capsule&&<div style={{position:"absolute",top:8,right:item.favorite?26:8,width:8,height:8,borderRadius:"50%",background:T.text,opacity:0.5}}/>}
       {item.colors?.length>0&&<div style={{position:"absolute",bottom:8,right:8,display:"flex",gap:2}}>{item.colors.slice(0,3).map((c,i)=><div key={i} style={{width:8,height:8,borderRadius:1,background:c,border:"1px solid "+T.pillBorder}}/>)}</div>}
@@ -320,18 +339,27 @@ function ItemCard({item,onClick,onDoubleTap,idx=0}){
 function Modal({item,onClose,onDelete,onUpdate}){
   const T=useTheme(),toast=useToast(),confirm=useConfirm(),cur=useCurrency(),t=useT();
   const[editing,setEditing]=useState(false);const[editData,setEditData]=useState({});
+  const modalTouchY=useRef(null);const[modalDragY,setModalDragY]=useState(0);
+  const onModalTS=e=>{modalTouchY.current=e.touches[0].clientY;};
+  const onModalTM=e=>{if(modalTouchY.current!==null){const dy=e.touches[0].clientY-modalTouchY.current;setModalDragY(dy>0?dy:0);}};
+  const onModalTE=()=>{if(modalDragY>120)onClose();setModalDragY(0);modalTouchY.current=null;};
+  useEffect(()=>{history.pushState({modal:true},"");const h=()=>onClose();window.addEventListener("popstate",h);return()=>window.removeEventListener("popstate",h);},[onClose]);
   const cat=CAT_MAP[item.category];
   const cpw=item.price&&item.wearCount?(item.price/item.wearCount).toFixed(0):null;
-  const daysSince=item.lastWorn?Math.floor((Date.now()-new Date(item.lastWorn))/86400000)+"д":"—";
-  const tags=[cat?.label,STYLES[STYLE_IDS.indexOf(item.style)],SEASONS.find(s=>s.id===item.season)?.label,item.brand].filter(Boolean);
-  const startEdit=()=>{setEditData({name:item.name,price:item.price||"",brand:item.brand||"",material:item.material||"",style:item.style,season:item.season});setEditing(true);};
+  const daysSince=item.lastWorn?Math.floor((Date.now()-new Date(item.lastWorn))/86400000)+t("д"):"—";
+  const seasonLabels=normSeason(item.season).map(sid=>{const s=SEASONS.find(s=>s.id===sid);return s?t(s.label):null;}).filter(Boolean);
+  const tags=[t(cat?.label||""),STYLES[STYLE_IDS.indexOf(item.style)],...seasonLabels,item.brand].filter(Boolean);
+  const startEdit=()=>{setEditData({name:item.name,price:item.price||"",brand:item.brand||"",material:item.material||"",style:item.style,season:normSeason(item.season)});setEditing(true);};
   const saveEdit=()=>{onUpdate(item.id,{...editData,price:parseFloat(editData.price)||0});setEditing(false);toast(t("Запазено ✓"),"success");};
   const inputSt={width:"100%",padding:"10px 14px",borderRadius:2,border:"1px solid "+T.border,fontSize:12,fontFamily:F.sans,color:T.text,background:T.surface,boxSizing:"border-box",marginBottom:8};
   const labelSt={fontFamily:F.mono,fontSize:11,color:T.textDim,letterSpacing:"0.12em",display:"block",marginBottom:4,textTransform:"uppercase"};
-  return(<div style={{position:"fixed",inset:0,background:T.overlay,backdropFilter:"blur(16px)",zIndex:200,display:"flex",alignItems:"flex-end",justifyContent:"center",animation:"fadeIn .2s"}} onClick={onClose}>
-    <div onClick={e=>e.stopPropagation()} style={{background:T.surface,borderRadius:"18px 18px 0 0",width:"100%",maxWidth:500,maxHeight:"92vh",overflow:"auto",animation:"slideUp .35s cubic-bezier(.23,1,.32,1)",borderTop:"1px solid "+T.borderLight}}>
-      <div style={{width:36,height:4,borderRadius:2,background:T.borderLight,margin:"10px auto 0"}}/>
-      {item.image&&<img src={item.image} alt="" style={{width:"100%",height:320,objectFit:"cover",opacity:T.imgOpacity,marginTop:8}}/>}
+  return(<div style={{position:"fixed",inset:0,background:modalDragY>0?"transparent":T.overlay,backdropFilter:modalDragY>0?"none":"blur(16px)",zIndex:200,display:"flex",alignItems:"flex-end",justifyContent:"center",animation:"fadeIn .2s",transition:modalDragY>0?"none":"background 0.2s"}} onClick={onClose}>
+    <div onClick={e=>e.stopPropagation()} onTouchStart={onModalTS} onTouchMove={onModalTM} onTouchEnd={onModalTE} style={{background:T.surface,borderRadius:"18px 18px 0 0",width:"100%",maxWidth:500,maxHeight:"92vh",overflow:"auto",animation:modalDragY>0?"none":"slideUp .35s cubic-bezier(.23,1,.32,1)",borderTop:"1px solid "+T.borderLight,transform:modalDragY>0?"translateY("+modalDragY+"px)":"none",transition:modalDragY>0?"none":"transform 0.3s",opacity:modalDragY>80?1-((modalDragY-80)/200):1}}>
+      <div style={{width:36,height:4,borderRadius:2,background:T.border,margin:"10px auto 0"}}/>
+      <div style={{display:"flex",justifyContent:"flex-end",padding:"6px 14px 0"}}>
+        <button onClick={onClose} style={{width:32,height:32,borderRadius:"50%",border:"1px solid "+T.border,background:T.surface,cursor:"pointer",color:T.textMuted,fontFamily:F.sans,fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
+      </div>
+      {item.image&&<img src={item.image} alt="" style={{width:"100%",height:320,objectFit:"cover",opacity:T.imgOpacity,marginTop:4}}/>}
       <div style={{padding:"20px 22px 34px"}}>
         {!editing?<>
           <div style={{display:"flex",gap:6,marginBottom:10,flexWrap:"wrap"}}>
@@ -341,16 +369,16 @@ function Modal({item,onClose,onDelete,onUpdate}){
             {(item.wearsSinceWash||0)>=LAUNDRY_THRESHOLD&&!item.inLaundry&&<span style={{border:"1px solid "+T.washWarn,padding:"3px 10px",borderRadius:2,fontFamily:F.mono,fontSize:10,color:T.washWarn,letterSpacing:"0.08em"}}>{"~ "+t("НУЖДАЕ СЕ ОТ ПРАНЕ")}</span>}
           </div>
           <h2 style={{fontFamily:F.serif,fontSize:26,fontWeight:300,margin:"6px 0",color:T.text}}>{item.name}</h2>
-          {item.colors?.length>0&&<div style={{display:"flex",gap:6,margin:"12px 0 16px"}}>{item.colors.map((c,i)=><div key={i} style={{display:"flex",alignItems:"center",gap:6,border:"1px solid "+T.border,padding:"4px 10px 4px 4px",borderRadius:2}}><div style={{width:14,height:14,borderRadius:2,background:c,border:c==="#FFFFFF"?"1px solid "+T.border:"none"}}/><span style={{fontFamily:F.mono,fontSize:10,color:T.textMuted,letterSpacing:"0.04em",textTransform:"uppercase"}}>{getColorName(c)}</span></div>)}</div>}
+          {item.colors?.length>0&&<div style={{display:"flex",gap:6,margin:"12px 0 16px"}}>{item.colors.map((c,i)=><div key={i} style={{display:"flex",alignItems:"center",gap:6,border:"1px solid "+T.border,padding:"4px 10px 4px 4px",borderRadius:2}}><div style={{width:14,height:14,borderRadius:2,background:c,border:c==="#FFFFFF"?"1px solid "+T.border:"none"}}/><span style={{fontFamily:F.mono,fontSize:10,color:T.textMuted,letterSpacing:"0.04em",textTransform:"uppercase"}}>{t(getColorName(c))}</span></div>)}</div>}
           <div style={{display:"flex",gap:0,marginBottom:18,border:"1px solid "+T.border,borderRadius:2,overflow:"hidden"}}>
-            {[{v:item.wearCount||0,l:t("НОСЕНО")},{v:daysSince,l:t("ОТ ПОСЛЕДНО")},{v:item.price?cur+item.price:"—",l:t("ЦЕНА")},{v:cpw?cur+cpw:"—",l:t("ЦЕНА/НОСЕНЕ")}].map((d,i)=><div key={i} style={{flex:1,padding:"14px 6px",textAlign:"center",borderRight:i<3?"1px solid "+T.border:"none"}}><p style={{fontFamily:F.serif,fontSize:18,color:T.text,margin:"0 0 2px"}}>{d.v}</p><p style={{fontFamily:F.mono,fontSize:10,color:T.textDim,letterSpacing:"0.1em",margin:0}}>{d.l}</p></div>)}
+            {[{v:item.wearCount||0,l:t("НОСЕНО")},{v:daysSince,l:t("ОТ ПОСЛЕДНО")},{v:item.price?cur+item.price:"—",l:t("ЦЕНА")},{v:cpw?cur+cpw:"—",l:t("ЦЕНА/НОСЕНЕ")}].map((d,i)=><div key={i} style={{flex:1,padding:"14px 6px",textAlign:"center",borderRight:i<3?"1px solid "+T.border:"none"}}><p style={{fontFamily:F.mono,fontSize:16,color:T.text,margin:"0 0 2px",fontWeight:400}}>{d.v}</p><p style={{fontFamily:F.mono,fontSize:8,color:T.textDim,letterSpacing:"0.1em",margin:0}}>{d.l}</p></div>)}
           </div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginBottom:10}}>
-            {[{label:t("Носих днес"),action:()=>{onUpdate(item.id,{wearCount:(item.wearCount||0)+1,lastWorn:new Date().toISOString()});toast(t("Отбелязано ✓"),"success");}},{label:item.favorite?t("Премахни ♥"):t("Любимо ♥"),action:()=>{onUpdate(item.id,{favorite:!item.favorite});toast(item.favorite?"Премахнато":"Добавено в любими ♥","success");}},{label:item.capsule?t("Не е капсула"):t("Капсула ✦"),action:()=>{onUpdate(item.id,{capsule:!item.capsule});toast(item.capsule?"Премахнато от капсула":"Добавено в капсула","success");}},{label:item.inLaundry?t("Чисто ~"):t("В пералня ~"),action:()=>{onUpdate(item.id,{inLaundry:!item.inLaundry});toast(item.inLaundry?"Обратно в гардероба":"Маркирано за пране","success");}}].map((a,i)=><button key={i} onClick={a.action} style={{padding:12,borderRadius:2,border:"1px solid "+T.border,background:"transparent",fontFamily:F.mono,fontSize:11,color:T.textMuted,cursor:"pointer",letterSpacing:"0.04em",transition:"all 0.2s"}}>{a.label}</button>)}
+            {[{label:t("Носих днес"),action:()=>{onUpdate(item.id,{wearCount:(item.wearCount||0)+1,lastWorn:new Date().toISOString()});toast(t("Отбелязано ✓"),"success");}},{label:item.favorite?t("Премахни ♥"):t("Любимо ♥"),action:()=>{onUpdate(item.id,{favorite:!item.favorite});toast(item.favorite?t("Премахнато"):t("Добавено в любими ♥"),"success");}},{label:item.capsule?t("Не е капсула"):t("Капсула ✦"),action:()=>{onUpdate(item.id,{capsule:!item.capsule});toast(item.capsule?t("Премахнато от капсула"):t("Добавено в капсула"),"success");}},{label:item.inLaundry?t("Чисто ~"):t("В пералня ~"),action:()=>{onUpdate(item.id,{inLaundry:!item.inLaundry});toast(item.inLaundry?t("Обратно в гардероба"):t("Маркирано за пране"),"success");}}].map((a,i)=><button key={i} onClick={a.action} style={{padding:12,borderRadius:2,border:"1px solid "+T.border,background:"transparent",fontFamily:F.mono,fontSize:11,color:T.textMuted,cursor:"pointer",letterSpacing:"0.04em",transition:"all 0.2s"}}>{a.label}</button>)}
           </div>
           <div style={{display:"flex",gap:6}}>
             <button onClick={startEdit} style={{flex:1,padding:12,borderRadius:2,border:"1px solid "+T.border,background:"transparent",fontFamily:F.mono,fontSize:11,color:T.textMuted,cursor:"pointer",letterSpacing:"0.06em"}}>{t("РЕДАКТИРАЙ")}</button>
-            <button onClick={()=>{const dup={...item,id:Date.now().toString(),name:item.name+" (копие)",addedAt:new Date().toISOString(),wearCount:0,lastWorn:null};onUpdate("__duplicate__",dup);onClose();toast(t("Дублирано ✓"),"success");}} style={{flex:1,padding:12,borderRadius:2,border:"1px solid "+T.border,background:"transparent",fontFamily:F.mono,fontSize:11,color:T.textMuted,cursor:"pointer",letterSpacing:"0.06em"}}>{t("ДУБЛИРАЙ")}</button>
+            <button onClick={()=>{const dup={...item,id:Date.now().toString(),name:item.name+" ("+t("копие")+")",addedAt:new Date().toISOString(),wearCount:0,lastWorn:null};onUpdate("__duplicate__",dup);onClose();toast(t("Дублирано ✓"),"success");}} style={{flex:1,padding:12,borderRadius:2,border:"1px solid "+T.border,background:"transparent",fontFamily:F.mono,fontSize:11,color:T.textMuted,cursor:"pointer",letterSpacing:"0.06em"}}>{t("ДУБЛИРАЙ")}</button>
           </div>
           <button onClick={()=>confirm(t("Сигурен ли си, че искаш да премахнеш ")+item.name+"?",()=>{onDelete(item.id);onClose();toast(t("Премахнато"),"info");})} style={{width:"100%",padding:12,background:"transparent",border:"1px solid "+T.danger,borderRadius:2,color:T.dangerText,fontFamily:F.mono,fontSize:11,cursor:"pointer",letterSpacing:"0.08em",textTransform:"uppercase",marginTop:8}}>{t("Премахни от гардероба")}</button>
         </>:
@@ -361,39 +389,13 @@ function Modal({item,onClose,onDelete,onUpdate}){
             <button onClick={()=>setEditing(false)} style={{background:"none",border:"none",color:T.textDim,fontSize:18,cursor:"pointer"}}>×</button>
           </div>
           <label style={labelSt}>{t("ИМЕ")}</label><input value={editData.name||""} onChange={e=>setEditData(p=>({...p,name:e.target.value.slice(0,100)}))} maxLength={100} style={inputSt}/>
-          <label style={labelSt}>{t("ЦЕНА")}</label><input type="number" value={editData.price||""} onChange={e=>setEditData(p=>({...p,price:e.target.value}))} style={inputSt}/>
+          <label style={labelSt}>{t("ЦЕНА")} (€)</label><input type="number" value={editData.price||""} onChange={e=>setEditData(p=>({...p,price:e.target.value}))} placeholder="0" style={inputSt}/>
           <label style={labelSt}>{t("МАРКА")}</label><input value={editData.brand||""} onChange={e=>setEditData(p=>({...p,brand:e.target.value}))} style={inputSt}/>
           <label style={labelSt}>{t("СТИЛ")}</label><div style={{display:"flex",flexWrap:"wrap",gap:4,marginBottom:12}}>{STYLES.map((s,i)=><Pill key={i} active={editData.style===STYLE_IDS[i]} onClick={()=>setEditData(p=>({...p,style:STYLE_IDS[i]}))} small>{s}</Pill>)}</div>
-          <label style={labelSt}>{t("СЕЗОН")}</label><div style={{display:"flex",flexWrap:"wrap",gap:4,marginBottom:16}}>{SEASONS.map(s=><Pill key={s.id} active={editData.season===s.id} onClick={()=>setEditData(p=>({...p,season:s.id}))} small>{s.label}</Pill>)}</div>
+          <label style={labelSt}>{t("СЕЗОН")}</label><div style={{display:"flex",flexWrap:"wrap",gap:4,marginBottom:16}}>{SEASONS.map(s=><Pill key={s.id} active={(editData.season||[]).includes(s.id)} onClick={()=>setEditData(p=>{const cur=p.season||[];return{...p,season:cur.includes(s.id)?cur.filter(x=>x!==s.id):[...cur,s.id]};})} small>{t(s.label)}</Pill>)}</div>
           <button onClick={saveEdit} style={{width:"100%",padding:14,borderRadius:2,border:"none",background:T.text,color:T.bg,fontFamily:F.sans,fontSize:11,fontWeight:600,cursor:"pointer",letterSpacing:"0.1em"}}>{t("ЗАПАЗИ ПРОМЕНИТЕ")}</button>
         </div>}
       </div>
-    </div>
-  </div>);
-}
-
-function CompactOOTDCard({items,weather,onDismiss,calendar}){
-  const T=useTheme(),t=useT(),[combo,setCombo]=useState(null),[show,setShow]=useState(true),[expanded,setExpanded]=useState(false);
-  useEffect(()=>{if(items.length<2)return;const avail=items.filter(i=>!i.inLaundry);const combos=generateCombos(avail,"everyday",1,weather);if(combos.length>0)setCombo(combos[0]);},[items,weather]);
-  if(!combo||!show||items.length<2)return null;
-  const wornToday=calendar?.[todayKey()];
-  return(<div style={{margin:"10px 14px 0",background:T.card,border:"1px solid "+T.borderLight,borderRadius:4,overflow:"hidden",boxShadow:T.shadow}}>
-    <div onClick={()=>setExpanded(p=>!p)} style={{padding:"10px 14px 10px 18px",display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer",WebkitTapHighlightColor:"transparent",minHeight:44,boxSizing:"border-box"}}>
-      <div style={{display:"flex",alignItems:"center",gap:10}}>
-        <span style={{fontFamily:F.mono,fontSize:10,color:T.textDim,letterSpacing:"0.16em",flexShrink:0}}>ВИЗИЯ НА ДЕНЯ</span>
-        {!expanded&&!wornToday&&<div style={{display:"flex",gap:3}}>{combo.items.slice(0,4).map(item=><div key={item.id} style={{width:26,height:26,borderRadius:2,overflow:"hidden",border:"1px solid "+T.border,flexShrink:0}}>{item.image?<img src={item.image} alt="" style={{width:"100%",height:"100%",objectFit:"cover",opacity:T.imgOpacity}}/>:<div style={{width:"100%",height:"100%",background:T.bg,display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{fontFamily:F.serif,fontSize:10,color:T.border}}>{CAT_MAP[item.category]?.label?.[0]}</span></div>}</div>)}</div>}
-      </div>
-      <div style={{display:"flex",alignItems:"center",gap:8}}>
-        <span style={{fontFamily:F.sans,fontSize:10,color:T.textDim,transition:"transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)",transform:expanded?"rotate(180deg)":"rotate(0deg)",display:"inline-block"}}>{"▾"}</span>
-        <button onClick={(e)=>{e.stopPropagation();setShow(false);onDismiss?.();}} style={{background:"none",border:"none",cursor:"pointer",padding:4,color:T.textDim,fontSize:14,lineHeight:1}}>{"×"}</button>
-      </div>
-    </div>
-    <div style={{maxHeight:expanded?250:0,opacity:expanded?1:0,overflow:"hidden",transition:"max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease"}}>
-      <div style={{padding:"0 18px 14px"}}>
-        <p style={{fontFamily:F.serif,fontSize:18,color:T.text,fontWeight:400,margin:"0 0 10px"}}>{wornToday?t("Вече отбеляза днешната визия"):t("Предложение за днес")}</p>
-        {!wornToday&&<div style={{display:"flex",gap:2,height:90}}>{combo.items.slice(0,4).map(item=><div key={item.id} style={{flex:1,borderRadius:3,overflow:"hidden",border:"1px solid "+T.border}}>{item.image?<img src={item.image} alt="" style={{width:"100%",height:"100%",objectFit:"cover",opacity:T.imgOpacity}}/>:<div style={{width:"100%",height:"100%",background:T.bg,display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{fontFamily:F.serif,fontSize:20,color:T.border}}>{CAT_MAP[item.category]?.label?.[0]}</span></div>}</div>)}</div>}
-      </div>
-      <ColorBar items={combo.items}/>
     </div>
   </div>);
 }
@@ -423,7 +425,9 @@ function CalendarModal({calendar,items,onClose,onUpdateCalendar}){
   const isFuture=selDay>today;
   return(<div style={{position:"fixed",inset:0,background:T.overlay,backdropFilter:"blur(16px)",zIndex:200,display:"flex",alignItems:"flex-end",justifyContent:"center",animation:"fadeIn .2s"}} onClick={onClose}>
     <div onClick={e=>e.stopPropagation()} style={{background:T.surface,borderRadius:"18px 18px 0 0",width:"100%",maxWidth:500,maxHeight:"85vh",overflow:"auto",animation:"slideUp .35s cubic-bezier(.23,1,.32,1)",padding:"20px 22px 34px"}}>
-      <div style={{width:36,height:4,borderRadius:2,background:T.borderLight,margin:"0 auto 16px"}}/>
+      <div style={{display:"flex",justifyContent:"flex-end",marginBottom:8}}>
+        <button onClick={onClose} style={{width:32,height:32,borderRadius:"50%",border:"1px solid "+T.border,background:T.surface,cursor:"pointer",color:T.textMuted,fontFamily:F.sans,fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
+      </div>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:18}}>
         <button onClick={prevM} style={{background:"none",border:"none",color:T.textMuted,fontSize:18,cursor:"pointer",padding:8}}>{"←"}</button>
         <h3 style={{fontFamily:F.serif,fontSize:20,color:T.text,fontWeight:400,margin:0}}>{monthNames[month.m]} <span style={{fontFamily:F.mono,fontSize:16,fontWeight:400,letterSpacing:"0.04em"}}>{month.y}</span></h3>
@@ -502,20 +506,22 @@ function CalendarModal({calendar,items,onClose,onUpdateCalendar}){
 // === WardrobeTab (with batch laundry) ===
 function WardrobeTab({items,onDelete,onUpdate,weather,calendar,setCalendar,hideSeasonal,setHideSeasonal,onNavigateOutfit}){
   const T=useTheme(),toast=useToast(),t=useT();
-  const[filter,setFilter]=useState("all");const[sort,setSort]=useState("newest");const[sel,setSel]=useState(null);const[search,setSearch]=useState("");const[ootdOff,setOotdOff]=useState(false);const[showCal,setShowCal]=useState(false);const[batchMode,setBatchMode]=useState(false);const[selected,setSelected]=useState(new Set());
+  const[filter,setFilter]=useState("all");const[sort,setSort]=useState("newest");const[sel,setSel]=useState(null);const[search,setSearch]=useState("");const[showCal,setShowCal]=useState(false);const[batchMode,setBatchMode]=useState(false);const[selected,setSelected]=useState(new Set());const[showSortMenu,setShowSortMenu]=useState(false);const[showCatMenu,setShowCatMenu]=useState(false);const sortRef=useRef(null);const catRef=useRef(null);
   let displayItems=hideSeasonal?getSeasonalItems(items,true):items;
   let filtered=filter==="all"?displayItems:filter==="favorites"?displayItems.filter(i=>i.favorite):filter==="capsule"?displayItems.filter(i=>i.capsule):filter==="laundry"?displayItems.filter(i=>i.inLaundry):displayItems.filter(i=>i.category===filter);
   if(search){const q=search.toLowerCase();filtered=filtered.filter(i=>i.name.toLowerCase().includes(q)||i.brand?.toLowerCase().includes(q)||(i.tags||[]).some(t=>t.toLowerCase().includes(q)));}
   const sortFns={newest:(a,b)=>new Date(b.addedAt)-new Date(a.addedAt),most_worn:(a,b)=>(b.wearCount||0)-(a.wearCount||0),least_worn:(a,b)=>(a.wearCount||0)-(b.wearCount||0),name:(a,b)=>a.name.localeCompare(b.name),price:(a,b)=>(b.price||0)-(a.price||0)};
   filtered=[...filtered].sort(sortFns[sort]||sortFns.newest);
-  const toggleFav=id=>{const itm=items.find(i=>i.id===id);if(itm){onUpdate(id,{favorite:!itm.favorite});toast(itm.favorite?"Премахнато от любими":"Добавено в любими ♥","success");}};
+  const toggleFav=id=>{const itm=items.find(i=>i.id===id);if(itm){onUpdate(id,{favorite:!itm.favorite});toast(itm.favorite?t("Премахнато от любими"):t("Добавено в любими ♥"),"success");}};
   const toggleSelect=id=>setSelected(p=>{const n=new Set(p);if(n.has(id))n.delete(id);else n.add(id);return n;});
-  const batchLaundry=(toLaundry)=>{selected.forEach(id=>onUpdate(id,{inLaundry:toLaundry}));toast(toLaundry?selected.size+" в пералнята":selected.size+" обратно в гардероба","success");setSelected(new Set());setBatchMode(false);};
+  const batchLaundry=(toLaundry)=>{selected.forEach(id=>onUpdate(id,{inLaundry:toLaundry}));toast(toLaundry?selected.size+" "+t("в пералнята"):selected.size+" "+t("обратно в гардероба"),"success");setSelected(new Set());setBatchMode(false);};
   const laundryCount=items.filter(i=>i.inLaundry).length;
+  useEffect(()=>{if(!showSortMenu)return;const h=e=>{if(sortRef.current&&!sortRef.current.contains(e.target))setShowSortMenu(false);};document.addEventListener("mousedown",h);return()=>document.removeEventListener("mousedown",h);},[showSortMenu]);
+  useEffect(()=>{if(!showCatMenu)return;const h=e=>{if(catRef.current&&!catRef.current.contains(e.target))setShowCatMenu(false);};document.addEventListener("mousedown",h);return()=>document.removeEventListener("mousedown",h);},[showCatMenu]);
+  const sortLabels={newest:t("Скорошни"),most_worn:t("Най-носени"),least_worn:t("Най-рядко"),price:t("Цена"),name:t("А-Я")};
   const handleItemClick=(item)=>{if(batchMode){toggleSelect(item.id);}else{setSel(item);}};
   return(<div style={{paddingBottom:90}}>
-    <CompactDailyCard weather={weather} calendar={calendar} onGenerate={onNavigateOutfit}/>
-    {!ootdOff&&<CompactOOTDCard items={items} weather={weather} onDismiss={()=>setOotdOff(true)} calendar={calendar}/>}
+    <DailyCard weather={weather} calendar={calendar} items={items} onGenerate={onNavigateOutfit}/>
     <div style={{position:"sticky",top:"calc(env(safe-area-inset-top, 0px) + 56px)",zIndex:50,background:T.bg+"ee",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",padding:"12px 16px 0",marginTop:4}}>
       <div style={{display:"flex",gap:8,marginBottom:10,alignItems:"center"}}>
         <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t("Търси...")} style={{flex:1,padding:"11px 16px",borderRadius:100,border:"1px solid "+T.pillBorder,fontSize:13,fontFamily:F.sans,color:T.text,background:T.pillBg,boxSizing:"border-box",minWidth:0}}/>
@@ -524,14 +530,29 @@ function WardrobeTab({items,onDelete,onUpdate,weather,calendar,setCalendar,hideS
           <span style={{fontFamily:F.mono,fontSize:15,fontWeight:500,color:T.textMuted,lineHeight:1,marginTop:2}}>{new Date().getDate()}</span>
         </button>
       </div>
-      <div style={{display:"flex",gap:5,overflowX:"auto",paddingBottom:10,WebkitOverflowScrolling:"touch"}}>
-        <Pill active={filter==="all"} onClick={()=>setFilter("all")} small>{t("Всички")}</Pill>
-        <Pill active={filter==="favorites"} onClick={()=>setFilter("favorites")} small>♥</Pill>
-        <Pill active={filter==="capsule"} onClick={()=>setFilter("capsule")} small>✦</Pill>
-        {laundryCount>0&&<Pill active={filter==="laundry"} onClick={()=>setFilter("laundry")} small>~ {laundryCount}</Pill>}
-        {CATEGORIES.map(cat=>{const cnt=displayItems.filter(i=>i.category===cat.id).length;if(!cnt)return null;return<Pill key={cat.id} active={filter===cat.id} onClick={()=>setFilter(cat.id)} small>{cat.label} {cnt}</Pill>;})}
-        <span style={{width:1,flexShrink:0,background:T.border,margin:"4px 2px"}}/>
-        {[{id:"newest",l:t("Скорошни")},{id:"most_worn",l:"↑"},{id:"least_worn",l:"↓"},{id:"price",l:t("Цена")},{id:"name",l:t("А-Я")}].map(s=><Pill key={s.id} active={sort===s.id} onClick={()=>setSort(s.id)} small>{s.l}</Pill>)}
+      <div style={{display:"flex",gap:5,overflowX:"auto",paddingBottom:6,WebkitOverflowScrolling:"touch"}}>
+        <Pill active={filter==="all"} onClick={()=>{setFilter("all");setShowCatMenu(false);}} small>{t("Всички")}</Pill>
+        <Pill active={filter==="favorites"} onClick={()=>{setFilter("favorites");setShowCatMenu(false);}} small>{t("Любими")}</Pill>
+        {laundryCount>0&&<Pill active={filter==="laundry"} onClick={()=>{setFilter("laundry");setShowCatMenu(false);}} small>{t("Пране")} {laundryCount}</Pill>}
+      </div>
+      <div style={{display:"flex",gap:8,paddingBottom:10}}>
+        <div ref={catRef} style={{position:"relative"}}>
+          <button onClick={()=>{setShowCatMenu(p=>!p);setShowSortMenu(false);}} style={{display:"flex",alignItems:"center",gap:4,padding:"5px 12px",borderRadius:100,border:"1px solid "+(CATEGORIES.some(c=>filter===c.id)?T.text:T.pillBorder),background:CATEGORIES.some(c=>filter===c.id)?T.text:T.pillBg,color:CATEGORIES.some(c=>filter===c.id)?T.bg:T.textMuted,fontFamily:F.sans,fontSize:11,cursor:"pointer",letterSpacing:"0.02em"}}>
+            <span style={{opacity:CATEGORIES.some(c=>filter===c.id)?1:0.6}}>{t("Категория:")}</span> <span style={{fontWeight:500}}>{(()=>{const ac=CATEGORIES.find(c=>filter===c.id);return ac?t(ac.label):t("Всички");})()}</span> <span style={{fontSize:9,marginLeft:2}}>{showCatMenu?"▴":"▾"}</span>
+          </button>
+          {showCatMenu&&<div style={{position:"absolute",top:"100%",left:0,marginTop:4,background:T.card,border:"1px solid "+T.border,borderRadius:12,padding:"4px 0",zIndex:60,minWidth:170,boxShadow:"0 8px 24px rgba(0,0,0,0.3)"}}>
+            <button onClick={()=>{setFilter("all");setShowCatMenu(false);}} style={{display:"block",width:"100%",padding:"10px 16px",border:"none",background:filter==="all"?T.subtleBg:"transparent",color:filter==="all"?T.text:T.textMuted,fontFamily:F.sans,fontSize:12,textAlign:"left",cursor:"pointer",letterSpacing:"0.02em",transition:"background 0.2s"}}>{t("Всички")}</button>
+            {CATEGORIES.map(cat=>{const cnt=displayItems.filter(i=>i.category===cat.id).length;if(!cnt)return null;return<button key={cat.id} onClick={()=>{setFilter(cat.id);setShowCatMenu(false);}} style={{display:"block",width:"100%",padding:"10px 16px",border:"none",background:filter===cat.id?T.subtleBg:"transparent",color:filter===cat.id?T.text:T.textMuted,fontFamily:F.sans,fontSize:12,textAlign:"left",cursor:"pointer",letterSpacing:"0.02em",transition:"background 0.2s"}}>{t(cat.label)} <span style={{opacity:0.5}}>{cnt}</span></button>;})}
+          </div>}
+        </div>
+        <div ref={sortRef} style={{position:"relative"}}>
+          <button onClick={()=>{setShowSortMenu(p=>!p);setShowCatMenu(false);}} style={{display:"flex",alignItems:"center",gap:4,padding:"5px 12px",borderRadius:100,border:"1px solid "+T.pillBorder,background:T.pillBg,color:T.textMuted,fontFamily:F.sans,fontSize:11,cursor:"pointer",letterSpacing:"0.02em"}}>
+            <span style={{opacity:0.6}}>{t("Подреди:")}</span> <span style={{color:T.text,fontWeight:500}}>{sortLabels[sort]}</span> <span style={{fontSize:9,marginLeft:2}}>{showSortMenu?"▴":"▾"}</span>
+          </button>
+          {showSortMenu&&<div style={{position:"absolute",top:"100%",left:0,marginTop:4,background:T.card,border:"1px solid "+T.border,borderRadius:12,padding:"4px 0",zIndex:60,minWidth:160,boxShadow:"0 8px 24px rgba(0,0,0,0.3)"}}>
+            {Object.entries(sortLabels).map(([id,label])=><button key={id} onClick={()=>{setSort(id);setShowSortMenu(false);}} style={{display:"block",width:"100%",padding:"10px 16px",border:"none",background:sort===id?T.subtleBg:"transparent",color:sort===id?T.text:T.textMuted,fontFamily:F.sans,fontSize:12,textAlign:"left",cursor:"pointer",letterSpacing:"0.02em",transition:"background 0.2s"}}>{label}</button>)}
+          </div>}
+        </div>
       </div>
     </div>
     <div style={{padding:"0 16px"}}>
@@ -546,25 +567,38 @@ function WardrobeTab({items,onDelete,onUpdate,weather,calendar,setCalendar,hideS
 // === AddTab ===
 function AddTab({onAdd,lastCat}){
   const T=useTheme(),toast=useToast(),t=useT();const{user,uploadItemImage}=useAuth()||{};
-  const[step,setStep]=useState("photo");const[img,setImg]=useState(null);const[name,setName]=useState("");const[cat,setCat]=useState(lastCat||"");const[colors,setColors]=useState([]);const[style,setStyle]=useState("");const[season,setSeason]=useState("");const[mat,setMat]=useState("");const[brand,setBrand]=useState("");const[price,setPrice]=useState("");const[tags,setTags]=useState([]);const[tagIn,setTagIn]=useState("");const vidRef=useRef(null);const strRef=useRef(null);const fileRef=useRef(null);const[cam,setCam]=useState(false);const[err,setErr]=useState(null);
-  const startCam=async()=>{try{setErr(null);if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){setErr(t("Камерата не е налична на това устройство"));return;}const s=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:"environment"},width:{ideal:1280},height:{ideal:960}}});strRef.current=s;setCam(true);requestAnimationFrame(()=>{requestAnimationFrame(()=>{if(vidRef.current&&strRef.current){vidRef.current.srcObject=strRef.current;vidRef.current.setAttribute("playsinline","true");vidRef.current.setAttribute("webkit-playsinline","true");vidRef.current.muted=true;vidRef.current.play().catch(()=>{});}});});}catch(e){setErr(t("Няма достъп до камерата. Разреши достъпа от настройките на браузъра."));}};
+  const[step,setStep]=useState("photo");const[img,setImg]=useState(null);const[name,setName]=useState("");const[cat,setCat]=useState(lastCat||"");const[colors,setColors]=useState([]);const[style,setStyle]=useState("");const[season,setSeason]=useState([]);const[mat,setMat]=useState("");const[brand,setBrand]=useState("");const[price,setPrice]=useState("");const[tags,setTags]=useState([]);const[tagIn,setTagIn]=useState("");const vidRef=useRef(null);const strRef=useRef(null);const fileRef=useRef(null);const[cam,setCam]=useState(false);const[err,setErr]=useState(null);const camFacing=useRef("environment");const[bgRemoving,setBgRemoving]=useState(false);const[bgDone,setBgDone]=useState(false);const bgRef=useRef(0);
+  const processImg=async(d)=>{const id=++bgRef.current;setImg(d);setStep("details");setBgRemoving(true);setBgDone(false);try{const processed=await removeBg(d);if(id===bgRef.current&&processed){setImg(processed);setBgDone(true);}}catch(e){console.warn("BG removal:",e);}finally{if(id===bgRef.current)setBgRemoving(false);}};
+  const startCam=async(facing)=>{try{setErr(null);if(facing)camFacing.current=facing;if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){setErr(t("Камерата не е налична на това устройство"));return;}if(strRef.current){strRef.current.getTracks().forEach(t=>t.stop());strRef.current=null;}const s=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:camFacing.current},width:{ideal:1920},height:{ideal:1440}}});strRef.current=s;setCam(true);requestAnimationFrame(()=>{requestAnimationFrame(()=>{if(vidRef.current&&strRef.current){vidRef.current.srcObject=strRef.current;vidRef.current.setAttribute("playsinline","true");vidRef.current.setAttribute("webkit-playsinline","true");vidRef.current.muted=true;vidRef.current.play().catch(()=>{});}});});}catch(e){setErr(t("Няма достъп до камерата. Разреши достъпа от настройките на браузъра."));}};
+  const flipCam=()=>{camFacing.current=camFacing.current==="environment"?"user":"environment";startCam();};
   const stopCam=()=>{if(strRef.current){strRef.current.getTracks().forEach(t=>t.stop());strRef.current=null;}setCam(false);};
-  const capture=async()=>{const vid=vidRef.current;if(!vid||!vid.videoWidth)return;const c=document.createElement("canvas");c.width=vid.videoWidth;c.height=vid.videoHeight;c.getContext("2d").drawImage(vid,0,0);const d=await compress(c.toDataURL("image/jpeg",0.85));setImg(d);stopCam();setStep("details");};
-  const handleFile=async(e)=>{const f=e.target.files?.[0];if(!f)return;if(!f.type.startsWith("image/")){toast(t("Грешка при запазване"),"error");return;}if(f.size>15*1024*1024){toast(t("Грешка при запазване"),"error");return;}const r=new FileReader();r.onload=async(ev)=>{const d=await compress(ev.target.result);setImg(d);stopCam();setStep("details");};r.readAsDataURL(f);};
+  const capture=async()=>{const vid=vidRef.current;if(!vid||!vid.videoWidth)return;const c=document.createElement("canvas");c.width=vid.videoWidth;c.height=vid.videoHeight;c.getContext("2d").drawImage(vid,0,0);const d=await compress(c.toDataURL("image/jpeg",0.92));stopCam();processImg(d);};
+  const handleFile=async(e)=>{const f=e.target.files?.[0];if(!f)return;if(!f.type.startsWith("image/")){toast(t("Грешка при запазване"),"error");return;}if(f.size>15*1024*1024){toast(t("Грешка при запазване"),"error");return;}const r=new FileReader();r.onload=async(ev)=>{const d=await compress(ev.target.result);stopCam();processImg(d);};r.readAsDataURL(f);};
   const toggleColor=(h)=>setColors(p=>p.includes(h)?p.filter(c=>c!==h):p.length>=3?p:[...p,h]);
   const addTag=()=>{const t=tagIn.trim().toLowerCase();if(t&&!tags.includes(t)&&tags.length<5){setTags(p=>[...p,t]);setTagIn("");}};
-  const canSave=name.trim()&&cat&&colors.length>0&&style&&season;const[saving,setSaving]=useState(false);
-  const save=async()=>{setSaving(true);try{const itemId=Date.now().toString();let imageUrl=img;if(img&&user&&uploadItemImage){const url=await uploadItemImage(itemId,img);if(url)imageUrl=url;}onAdd({id:itemId,image:imageUrl,name:name.trim(),category:cat,colors,style,season,material:mat||null,brand:brand||null,price:parseFloat(price)||0,tags,wearCount:0,favorite:false,capsule:false,inLaundry:false,lastWorn:null,addedAt:new Date().toISOString()});toast(t("Добавено в гардероба ✓"),"success");setStep("photo");setImg(null);setName("");setCat("");setColors([]);setStyle("");setSeason("");setMat("");setBrand("");setPrice("");setTags([]);}catch(e){console.warn("Save error:",e);toast(t("Грешка при запазване"),"error");}finally{setSaving(false);}};
+  const canSave=name.trim()&&cat&&colors.length>0&&style&&season.length>0;const[saving,setSaving]=useState(false);
+  const save=async()=>{setSaving(true);try{const itemId=Date.now().toString();let imageUrl=img;if(img&&user&&uploadItemImage){const url=await uploadItemImage(itemId,img);if(url){imageUrl=url;}else{toast(t("Снимката не беше качена, но дрехата е добавена"),"error");}}onAdd({id:itemId,image:imageUrl,name:name.trim(),category:cat,colors,style,season,material:mat||null,brand:brand||null,price:parseFloat(price)||0,tags,wearCount:0,favorite:false,capsule:false,inLaundry:false,lastWorn:null,addedAt:new Date().toISOString()});toast(t("Добавено в гардероба ✓"),"success");setStep("photo");setImg(null);setName("");setCat("");setColors([]);setStyle("");setSeason([]);setMat("");setBrand("");setPrice("");setTags([]);setBgDone(false);setBgRemoving(false);}catch(e){console.warn("Save error:",e);toast(t("Грешка при запазване"),"error");}finally{setSaving(false);}};
   useEffect(()=>()=>stopCam(),[]);
   const inputSt={width:"100%",padding:"12px 18px",borderRadius:100,border:"1px solid "+T.pillBorder,fontSize:13,fontFamily:F.sans,color:T.text,background:T.pillBg,boxSizing:"border-box"};
   const labelSt={fontFamily:F.mono,fontSize:10,color:T.textDim,letterSpacing:"0.2em",display:"block",marginBottom:8,textTransform:"uppercase"};
   if(step==="photo"){return(<div style={{padding:"28px 20px"}}><p style={{...labelSt,marginBottom:4}}>{t("НОВА ДРЕХА")}</p><h2 style={{fontFamily:F.serif,fontSize:34,fontWeight:300,color:T.text,margin:"0 0 8px",letterSpacing:"-0.02em"}}>{t("Добави в гардероба")}</h2><div style={{width:40,height:1,background:"linear-gradient(90deg, "+T.text+" 0%, transparent 100%)",marginBottom:32}}/>
     {err&&<div style={{display:"flex",alignItems:"flex-start",gap:10,padding:"14px 16px",marginBottom:16,background:T.subtleBg,borderRadius:8,border:"1px solid "+T.border}}><span style={{fontSize:14,flexShrink:0}}>⚠</span><div><p style={{fontFamily:F.sans,fontSize:12,color:T.textMuted,margin:"0 0 6px",lineHeight:1.5}}>{err}</p><button onClick={()=>{setErr(null);fileRef.current?.click();}} style={{fontFamily:F.mono,fontSize:10,color:T.text,background:"none",border:"none",cursor:"pointer",padding:0,letterSpacing:"0.1em",textDecoration:"underline",textUnderlineOffset:3}}>{t("Качи от галерията")}</button></div></div>}
-    {cam?(<div style={{borderRadius:12,overflow:"hidden",position:"relative"}}><video ref={vidRef} autoPlay playsInline muted onLoadedMetadata={e=>e.target.play().catch(()=>{})} style={{width:"100%",display:"block",background:"#000",minHeight:360,WebkitTransform:"translateZ(0)"}}/>
-      <div style={{position:"absolute",top:14,left:0,right:0,textAlign:"center"}}><span style={{fontFamily:F.mono,fontSize:9,color:"rgba(255,255,255,0.6)",letterSpacing:"0.2em",textTransform:"uppercase",background:"rgba(0,0,0,0.4)",padding:"6px 14px",borderRadius:100}}>{t("Центрирай дрехата")}</span></div>
-      <div style={{position:"absolute",bottom:0,left:0,right:0,display:"flex",alignItems:"center",justifyContent:"center",padding:"20px 0 24px",background:"linear-gradient(transparent, rgba(0,0,0,0.6))"}}>
-        <button onClick={stopCam} style={{position:"absolute",left:24,width:36,height:36,borderRadius:"50%",border:"1px solid rgba(255,255,255,0.3)",background:"rgba(0,0,0,0.4)",cursor:"pointer",fontSize:14,color:"rgba(255,255,255,0.7)",display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
-        <button onClick={capture} style={{width:68,height:68,borderRadius:"50%",border:"3px solid rgba(255,255,255,0.9)",background:"transparent",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"transform 0.15s"}}><div style={{width:54,height:54,borderRadius:"50%",background:"rgba(255,255,255,0.9)"}}/></button>
+    {cam?(<div style={{borderRadius:12,overflow:"hidden",position:"relative",background:"#000"}}><video ref={vidRef} autoPlay playsInline muted onLoadedMetadata={e=>e.target.play().catch(()=>{})} style={{width:"100%",display:"block",background:"#000",minHeight:420,objectFit:"cover",WebkitTransform:"translateZ(0)"}}/>
+      {/* Guide overlay — clothing silhouette frame */}
+      <div style={{position:"absolute",inset:0,pointerEvents:"none"}}>
+        <div style={{position:"absolute",top:"10%",left:"15%",right:"15%",bottom:"18%",border:"1.5px solid rgba(255,255,255,0.2)",borderRadius:12}}/>
+        <div style={{position:"absolute",top:"10%",left:"15%",width:18,height:18,borderTop:"2.5px solid rgba(255,255,255,0.5)",borderLeft:"2.5px solid rgba(255,255,255,0.5)",borderRadius:"12px 0 0 0"}}/>
+        <div style={{position:"absolute",top:"10%",right:"15%",width:18,height:18,borderTop:"2.5px solid rgba(255,255,255,0.5)",borderRight:"2.5px solid rgba(255,255,255,0.5)",borderRadius:"0 12px 0 0"}}/>
+        <div style={{position:"absolute",bottom:"18%",left:"15%",width:18,height:18,borderBottom:"2.5px solid rgba(255,255,255,0.5)",borderLeft:"2.5px solid rgba(255,255,255,0.5)",borderRadius:"0 0 0 12px"}}/>
+        <div style={{position:"absolute",bottom:"18%",right:"15%",width:18,height:18,borderBottom:"2.5px solid rgba(255,255,255,0.5)",borderRight:"2.5px solid rgba(255,255,255,0.5)",borderRadius:"0 0 12px 0"}}/>
+      </div>
+      {/* Top hint */}
+      <div style={{position:"absolute",top:14,left:0,right:0,textAlign:"center"}}><span style={{fontFamily:F.mono,fontSize:9,color:"rgba(255,255,255,0.7)",letterSpacing:"0.18em",textTransform:"uppercase",background:"rgba(0,0,0,0.5)",padding:"6px 16px",borderRadius:100,backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)"}}>{t("Центрирай дрехата")}</span></div>
+      {/* Bottom controls */}
+      <div style={{position:"absolute",bottom:0,left:0,right:0,display:"flex",alignItems:"center",justifyContent:"center",padding:"24px 0 28px",background:"linear-gradient(transparent, rgba(0,0,0,0.7))"}}>
+        <button onClick={stopCam} style={{position:"absolute",left:24,width:42,height:42,borderRadius:"50%",border:"1px solid rgba(255,255,255,0.25)",background:"rgba(0,0,0,0.4)",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)",cursor:"pointer",fontSize:16,color:"rgba(255,255,255,0.8)",display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
+        <button onClick={capture} style={{width:74,height:74,borderRadius:"50%",border:"3.5px solid rgba(255,255,255,0.95)",background:"transparent",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"transform 0.15s",boxShadow:"0 0 20px rgba(255,255,255,0.1)"}}><div style={{width:58,height:58,borderRadius:"50%",background:"rgba(255,255,255,0.95)",transition:"transform 0.1s"}}/></button>
+        <button onClick={flipCam} style={{position:"absolute",right:24,width:42,height:42,borderRadius:"50%",border:"1px solid rgba(255,255,255,0.25)",background:"rgba(0,0,0,0.4)",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)",cursor:"pointer",fontSize:16,color:"rgba(255,255,255,0.8)",display:"flex",alignItems:"center",justifyContent:"center"}}>⟲</button>
       </div></div>):(<div style={{display:"flex",flexDirection:"column",gap:10}}>
       <p style={{fontFamily:F.sans,fontSize:12,color:T.textMuted,margin:"0 0 6px",lineHeight:1.5}}>{t("Снимката помага за по-точни комбинации")}</p>
       <button onClick={startCam} style={{padding:"32px 20px",borderRadius:8,border:"1.5px solid "+T.text,background:T.subtleBg,cursor:"pointer",textAlign:"center",transition:"all 0.3s",display:"flex",alignItems:"center",justifyContent:"center",gap:14}}><span style={{fontSize:22,opacity:0.35,filter:"grayscale(1)"}}>◉</span><div style={{textAlign:"left"}}><p style={{fontFamily:F.serif,fontSize:16,color:T.text,margin:0,fontWeight:400}}>{t("Снимай с камерата")}</p></div></button>
@@ -574,19 +608,25 @@ function AddTab({onAdd,lastCat}){
       <input ref={fileRef} type="file" accept="image/*" onChange={handleFile} style={{display:"none"}}/>
     </div>)}</div>);}
   return(<div style={{padding:"28px 20px 100px"}}>
-    <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:8}}><button onClick={()=>{setStep("photo");setImg(null);}} style={{background:"none",border:"none",cursor:"pointer",padding:0,color:T.textMuted,fontSize:18,fontFamily:F.serif}}>←</button><div><p style={{...labelSt,margin:"0 0 2px"}}>{t("ДЕТАЙЛИ")}</p><h2 style={{fontFamily:F.serif,fontSize:24,fontWeight:300,color:T.text,margin:0,letterSpacing:"-0.01em"}}>{t("Опиши дрехата")}</h2></div></div>
+    <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:8}}><button onClick={()=>{setStep("photo");setImg(null);setBgDone(false);setBgRemoving(false);}} style={{background:"none",border:"none",cursor:"pointer",padding:0,color:T.textMuted,fontSize:18,fontFamily:F.serif}}>←</button><div><p style={{...labelSt,margin:"0 0 2px"}}>{t("ДЕТАЙЛИ")}</p><h2 style={{fontFamily:F.serif,fontSize:24,fontWeight:300,color:T.text,margin:0,letterSpacing:"-0.01em"}}>{t("Опиши дрехата")}</h2></div></div>
     <div style={{width:40,height:1,background:"linear-gradient(90deg, "+T.text+" 0%, transparent 100%)",marginBottom:26}}/>
-    {img&&<div style={{position:"relative",marginBottom:24}}><img src={img} alt="" style={{width:"100%",height:220,objectFit:"cover",borderRadius:8,opacity:T.imgOpacity}}/><button onClick={()=>setImg(null)} style={{position:"absolute",top:8,right:8,width:28,height:28,borderRadius:"50%",border:"none",background:"rgba(0,0,0,0.6)",color:"#fff",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button></div>}
+    {img&&<div style={{position:"relative",marginBottom:24,borderRadius:10,overflow:"hidden",border:"1px solid "+T.border}}><img src={img} alt="" style={{width:"100%",height:300,objectFit:bgDone?"contain":"cover",display:"block",background:bgDone?"#FFFFFF":T.surface}}/>
+      {bgRemoving&&<div style={{position:"absolute",inset:0,background:"rgba(255,255,255,0.75)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:10}}>
+        <div style={{width:28,height:28,border:"2.5px solid "+T.border,borderTop:"2.5px solid "+T.text,borderRadius:"50%",animation:"spin 0.8s linear infinite"}}/>
+        <span style={{fontFamily:F.mono,fontSize:9,color:T.textMuted,letterSpacing:"0.14em"}}>{t("ПРЕМАХВАНЕ НА ФОН...")}</span>
+      </div>}
+      {!bgRemoving&&<div style={{position:"absolute",bottom:0,left:0,right:0,padding:"10px 14px",background:"linear-gradient(transparent,rgba(0,0,0,0.5))",display:"flex",justifyContent:"space-between",alignItems:"center"}}><span style={{fontFamily:F.mono,fontSize:9,color:"rgba(255,255,255,0.7)",letterSpacing:"0.12em"}}>{bgDone?"✓ "+t("ФОН ПРЕМАХНАТ"):"✓ "+t("СНИМКА ДОБАВЕНА")}</span><button onClick={()=>{setImg(null);setStep("photo");setBgDone(false);}} style={{padding:"5px 12px",borderRadius:100,border:"1px solid rgba(255,255,255,0.3)",background:"rgba(0,0,0,0.4)",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)",color:"rgba(255,255,255,0.8)",cursor:"pointer",fontFamily:F.mono,fontSize:9,letterSpacing:"0.08em"}}>{t("СМЕНИ")}</button></div>}
+    </div>}
     <p style={{fontFamily:F.mono,fontSize:9,color:T.textDim,letterSpacing:"0.2em",marginBottom:16,textTransform:"uppercase"}}>{t("ЗАДЪЛЖИТЕЛНИ ПОЛЕТА")}</p>
     <div style={{marginBottom:22}}><label style={labelSt}>{t("ИМЕ *")}</label><input value={name} onChange={e=>setName(e.target.value.slice(0,100))} placeholder={t("напр. Черна Nike Dri-FIT тениска")} maxLength={100} style={inputSt}/></div>
-    <div style={{marginBottom:22}}><label style={labelSt}>{t("КАТЕГОРИЯ *")}</label><div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6}}>{CATEGORIES.map(c=><button key={c.id} onClick={()=>setCat(c.id)} style={{padding:"14px 5px",borderRadius:4,textAlign:"center",cursor:"pointer",border:cat===c.id?"1px solid "+T.text:"1px solid "+T.border,background:cat===c.id?T.pillBg:"transparent",transition:"all 0.3s"}}><div style={{fontFamily:F.serif,fontSize:12,fontWeight:cat===c.id?500:300,color:cat===c.id?T.text:T.textMuted,marginBottom:2}}>{c.label}</div><div style={{fontFamily:F.mono,fontSize:10,color:T.textDim,letterSpacing:"0.04em"}}>{c.sub}</div></button>)}</div></div>
-    <div style={{marginBottom:22}}><label style={labelSt}>{t("ЦВЕТОВЕ * — ДО 3")}</label><div style={{display:"flex",flexWrap:"wrap",gap:5}}>{COLORS.map(([hex])=><button key={hex} onClick={()=>toggleColor(hex)} style={{width:36,height:36,borderRadius:3,background:hex,cursor:"pointer",padding:0,border:colors.includes(hex)?"2px solid "+T.text:hex==="#FFFFFF"?"1px solid "+T.border:"1px solid transparent",transform:colors.includes(hex)?"scale(1.15)":"scale(1)",transition:"all 0.2s cubic-bezier(0.16, 1, 0.3, 1)"}}/>)}</div>{colors.length>0&&<div style={{display:"flex",gap:4,marginTop:8}}>{colors.map(c=><span key={c} style={{fontFamily:F.mono,fontSize:10,border:"1px solid "+T.pillBorder,padding:"3px 10px",borderRadius:100,color:T.textMuted,letterSpacing:"0.06em",textTransform:"uppercase"}}>{getColorName(c)}</span>)}</div>}</div>
+    <div style={{marginBottom:22}}><label style={labelSt}>{t("КАТЕГОРИЯ *")}</label><div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6}}>{CATEGORIES.map(c=><button key={c.id} onClick={()=>setCat(c.id)} style={{padding:"14px 5px",borderRadius:4,textAlign:"center",cursor:"pointer",border:cat===c.id?"1px solid "+T.text:"1px solid "+T.border,background:cat===c.id?T.pillBg:"transparent",transition:"all 0.3s"}}><div style={{fontFamily:F.serif,fontSize:12,fontWeight:cat===c.id?500:300,color:cat===c.id?T.text:T.textMuted,marginBottom:2}}>{t(c.label)}</div><div style={{fontFamily:F.mono,fontSize:10,color:T.textDim,letterSpacing:"0.04em"}}>{t(c.sub)}</div></button>)}</div></div>
+    <div style={{marginBottom:22}}><label style={labelSt}>{t("ЦВЕТОВЕ * — ДО 3")}</label><div style={{display:"flex",flexWrap:"wrap",gap:5}}>{COLORS.map(([hex])=><button key={hex} onClick={()=>toggleColor(hex)} style={{width:36,height:36,borderRadius:3,background:hex,cursor:"pointer",padding:0,border:colors.includes(hex)?"2px solid "+T.text:hex==="#FFFFFF"?"1px solid "+T.border:"1px solid transparent",transform:colors.includes(hex)?"scale(1.15)":"scale(1)",transition:"all 0.2s cubic-bezier(0.16, 1, 0.3, 1)"}}/>)}</div>{colors.length>0&&<div style={{display:"flex",gap:4,marginTop:8}}>{colors.map(c=><span key={c} style={{fontFamily:F.mono,fontSize:10,border:"1px solid "+T.pillBorder,padding:"3px 10px",borderRadius:100,color:T.textMuted,letterSpacing:"0.06em",textTransform:"uppercase"}}>{t(getColorName(c))}</span>)}</div>}</div>
     <div style={{marginBottom:22}}><label style={labelSt}>{t("СТИЛ *")}</label><div style={{display:"flex",flexWrap:"wrap",gap:6}}>{STYLES.map((s,i)=><Pill key={i} active={style===STYLE_IDS[i]} onClick={()=>setStyle(STYLE_IDS[i])} small>{s}</Pill>)}</div></div>
-    <div style={{marginBottom:22}}><label style={labelSt}>{t("СЕЗОН *")}</label><div style={{display:"flex",flexWrap:"wrap",gap:6}}>{SEASONS.map(s=><Pill key={s.id} active={season===s.id} onClick={()=>setSeason(s.id)} small>{s.label}</Pill>)}</div></div>
+    <div style={{marginBottom:22}}><label style={labelSt}>{t("СЕЗОН *")}</label><div style={{display:"flex",flexWrap:"wrap",gap:6}}>{SEASONS.map(s=><Pill key={s.id} active={season.includes(s.id)} onClick={()=>setSeason(p=>p.includes(s.id)?p.filter(x=>x!==s.id):[...p,s.id])} small>{t(s.label)}</Pill>)}</div></div>
     <div style={{display:"flex",alignItems:"center",gap:14,margin:"28px 0 20px"}}><div style={{flex:1,height:1,background:T.border}}/><span style={{fontFamily:F.mono,fontSize:9,color:T.textDim,letterSpacing:"0.2em",textTransform:"uppercase",whiteSpace:"nowrap"}}>{t("ДОПЪЛНИТЕЛНИ")}</span><div style={{flex:1,height:1,background:T.border}}/></div>
-    <div style={{marginBottom:22}}><label style={labelSt}>{t("МАРКА")}</label><div style={{display:"flex",flexWrap:"wrap",gap:4,marginBottom:8}}>{BRANDS.map(b=><button key={b} onClick={()=>setBrand(brand===b?"":b)} style={{padding:"5px 12px",borderRadius:100,border:brand===b?"1px solid "+T.text:"1px solid "+T.pillBorder,background:brand===b?T.pillBg:"transparent",fontFamily:F.mono,fontSize:10,color:brand===b?T.text:T.textDim,cursor:"pointer",letterSpacing:"0.04em",transition:"all 0.3s"}}>{b}</button>)}</div><input value={brand} onChange={e=>setBrand(e.target.value.slice(0,50))} maxLength={50} placeholder={t("Или напиши марка")} style={{...inputSt,fontSize:12}}/></div>
-    <div style={{marginBottom:22}}><label style={labelSt}>{t("МАТЕРИАЛ")}</label><div style={{display:"flex",flexWrap:"wrap",gap:4}}>{MATERIALS.map(m=><button key={m} onClick={()=>setMat(mat===m?"":m)} style={{padding:"5px 12px",borderRadius:100,border:mat===m?"1px solid "+T.text:"1px solid "+T.pillBorder,background:mat===m?T.pillBg:"transparent",fontFamily:F.mono,fontSize:10,color:mat===m?T.text:T.textDim,cursor:"pointer",letterSpacing:"0.04em",transition:"all 0.3s"}}>{m}</button>)}</div></div>
-    <div style={{display:"flex",gap:10,marginBottom:24}}><div style={{flex:1}}><label style={labelSt}>{t("ЦЕНА")}</label><input type="number" value={price} onChange={e=>setPrice(e.target.value)} placeholder="0" style={{...inputSt,fontSize:12}}/></div><div style={{flex:2}}><label style={labelSt}>{t("ТАГОВЕ — ДО 5")}</label><div style={{display:"flex",gap:6}}><input value={tagIn} onChange={e=>setTagIn(e.target.value)} onKeyDown={e=>e.key==="Enter"&&addTag()} placeholder={t("#лято")} style={{...inputSt,fontSize:12,flex:1}}/><button onClick={addTag} style={{padding:"0 16px",borderRadius:100,border:"1px solid "+T.pillBorder,background:T.pillBg,color:T.textMuted,cursor:"pointer",fontFamily:F.mono,fontSize:10}}>+</button></div>{tags.length>0&&<div style={{display:"flex",gap:4,marginTop:7,flexWrap:"wrap"}}>{tags.map(t=><span key={t} onClick={()=>setTags(p=>p.filter(x=>x!==t))} style={{fontFamily:F.mono,fontSize:10,color:T.textMuted,background:T.pillBg,padding:"4px 10px",borderRadius:100,cursor:"pointer",border:"1px solid "+T.pillBorder}}>#{t} ×</span>)}</div>}</div></div>
+    <div style={{marginBottom:22}}><label style={labelSt}>{t("МАРКА")}</label><div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:8}}>{BRANDS.map(b=><Pill key={b} active={brand===b} onClick={()=>setBrand(brand===b?"":b)} small>{b}</Pill>)}</div><input value={brand} onChange={e=>setBrand(e.target.value.slice(0,50))} maxLength={50} placeholder={t("Или напиши марка")} style={{...inputSt,fontSize:12}}/></div>
+    <div style={{marginBottom:22}}><label style={labelSt}>{t("МАТЕРИАЛ")}</label><div style={{display:"flex",flexWrap:"wrap",gap:6}}>{MATERIALS.map(m=><Pill key={m} active={mat===m} onClick={()=>setMat(mat===m?"":m)} small>{t(m)}</Pill>)}</div></div>
+    <div style={{display:"flex",gap:10,marginBottom:24}}><div style={{flex:1}}><label style={labelSt}>{t("ЦЕНА")} (€)</label><input type="number" value={price} onChange={e=>setPrice(e.target.value)} placeholder="0" style={{...inputSt,fontSize:12}}/></div><div style={{flex:2}}><label style={labelSt}>{t("ТАГОВЕ — ДО 5")}</label><div style={{display:"flex",gap:6}}><input value={tagIn} onChange={e=>setTagIn(e.target.value)} onKeyDown={e=>e.key==="Enter"&&addTag()} placeholder={t("#лято")} style={{...inputSt,fontSize:12,flex:1}}/><button onClick={addTag} style={{padding:"0 16px",borderRadius:100,border:"1px solid "+T.pillBorder,background:T.pillBg,color:T.textMuted,cursor:"pointer",fontFamily:F.mono,fontSize:10}}>+</button></div>{tags.length>0&&<div style={{display:"flex",gap:4,marginTop:7,flexWrap:"wrap"}}>{tags.map(t=><span key={t} onClick={()=>setTags(p=>p.filter(x=>x!==t))} style={{fontFamily:F.mono,fontSize:10,color:T.textMuted,background:T.pillBg,padding:"4px 10px",borderRadius:100,cursor:"pointer",border:"1px solid "+T.pillBorder}}>#{t} ×</span>)}</div>}</div></div>
     <button onClick={save} disabled={!canSave||saving} style={{width:"100%",padding:18,borderRadius:8,border:"none",background:canSave&&!saving?T.text:T.border,color:canSave&&!saving?T.bg:T.textDim,fontFamily:F.sans,fontSize:12,fontWeight:600,cursor:canSave&&!saving?"pointer":"not-allowed",letterSpacing:"0.14em",textTransform:"uppercase",transition:"all 0.3s",marginTop:8,opacity:saving?0.6:1}}>{saving?t("Запазване..."):("✓ "+t("Добави в гардероба"))}</button>
   </div>);
 }
@@ -604,7 +644,7 @@ function OutfitsTab({items,onSave,weather,blacklist,addBlacklist,saved,onDeleteS
   const next=()=>setIdx(p=>(p+1)%results.length);const prev=()=>setIdx(p=>p===0?results.length-1:p-1);
   const surprise=()=>{const ids=OCCASIONS.map(o=>o.id);gen(ids[Math.floor(Math.random()*ids.length)]);};
   const onTS=e=>{touchStart.current=e.touches[0].clientX;};const onTM=e=>{if(touchStart.current!==null)setSwipeX(e.touches[0].clientX-touchStart.current);};const onTE=()=>{if(Math.abs(swipeX)>60){swipeX>0?prev():next();}setSwipeX(0);touchStart.current=null;};
-  const shareOutfit=async(cur)=>{const text="DRESHNIK.bg Визия\n\n"+cur.items.map(i=>i.name).join(" + ")+"\n\n"+getExplanation(cur,occ);if(navigator.share){try{await navigator.share({title:"DRESHNIK.bg",text});toast(t("Споделено ✓"),"success");}catch(e){console.warn(e);}}else{await navigator.clipboard?.writeText(text);toast(t("Копирано ✓"),"success");}};
+  const shareOutfit=async(cur)=>{const text="DRESHNIK.bg Визия\n\n"+cur.items.map(i=>i.name).join(" + ")+"\n\n"+getExplanation(cur,occ,t);if(navigator.share){try{await navigator.share({title:"DRESHNIK.bg",text});toast(t("Споделено ✓"),"success");}catch(e){console.warn(e);}}else{await navigator.clipboard?.writeText(text);toast(t("Копирано ✓"),"success");}};
   const cur=results[idx];
   const seasonLabel=new Date().getMonth()<2||new Date().getMonth()>10?"Зима":new Date().getMonth()<5?"Пролет":new Date().getMonth()<8?"Лято":"Есен";
   return(<div style={{padding:"28px 20px 100px"}}>
@@ -620,7 +660,7 @@ function OutfitsTab({items,onSave,weather,blacklist,addBlacklist,saved,onDeleteS
 
     {/* Sub-tab navigation */}
     <div style={{display:"flex",gap:0,marginBottom:28,borderBottom:"1px solid "+T.border}}>
-      {[{id:"generate",l:t("Генерирай")},{id:"saved",l:t("Запазени")+" ("+(saved?.length||0)+")"}].map(s=><button key={s.id} onClick={()=>setSubTab(s.id)} style={{padding:"12px 20px 14px",border:"none",background:"none",borderBottom:subTab===s.id?"1px solid "+T.text:"1px solid transparent",fontFamily:F.serif,fontSize:subTab===s.id?14:13,color:subTab===s.id?T.text:T.textDim,cursor:"pointer",fontWeight:subTab===s.id?500:300,letterSpacing:"0.02em",transition:"all 0.3s"}}>{s.l}</button>)}
+      {[{id:"generate",label:t("Генерирай"),count:null},{id:"saved",label:t("Запазени"),count:saved?.length||0}].map(s=><button key={s.id} onClick={()=>setSubTab(s.id)} style={{padding:"12px 20px 14px",border:"none",background:"none",borderBottom:subTab===s.id?"1px solid "+T.text:"1px solid transparent",fontFamily:F.serif,fontSize:subTab===s.id?14:13,color:subTab===s.id?T.text:T.textDim,cursor:"pointer",fontWeight:subTab===s.id?500:300,letterSpacing:"0.02em",transition:"all 0.3s"}}>{s.label}{s.count!==null&&<> (<span style={{fontFamily:F.mono}}>{s.count}</span>)</>}</button>)}
     </div>
 
     {subTab==="generate"&&<>
@@ -675,14 +715,14 @@ function OutfitsTab({items,onSave,weather,blacklist,addBlacklist,saved,onDeleteS
 
       {/* Explanation — editorial left-border quote */}
       <div style={{padding:"22px 24px",background:T.subtleBg,borderLeft:"2px solid "+T.text,margin:"20px 0 28px"}}>
-        <p style={{fontFamily:F.serif,fontSize:15,color:T.textSoft,lineHeight:1.8,margin:"0 0 14px"}}>{getExplanation(cur,occ)}</p>
-        <p style={{fontFamily:F.serif,fontSize:13,color:T.textDim,fontStyle:"italic",margin:0,lineHeight:1.6}}>„{getTip(occ)}"</p>
+        <p style={{fontFamily:F.serif,fontSize:15,color:T.textSoft,lineHeight:1.8,margin:"0 0 14px"}}>{getExplanation(cur,occ,t)}</p>
+        <p style={{fontFamily:F.serif,fontSize:13,color:T.textDim,fontStyle:"italic",margin:0,lineHeight:1.6}}>„{getTip(occ,lang)}"</p>
       </div>
 
       {/* Venue recommendation */}
       {venue&&<div style={{padding:"16px 20px",background:T.pillBg,border:"1px solid "+T.pillBorder,borderRadius:4,marginBottom:20}}>
         <div style={{flex:1}}>
-          <p style={{fontFamily:F.mono,fontSize:9,color:T.textDim,letterSpacing:"0.14em",margin:"0 0 3px",textTransform:"uppercase"}}>{lang==="en"?"WHERE TO GO":"КЪДЕ ДА ОТИДЕШ"}</p>
+          <p style={{fontFamily:F.mono,fontSize:9,color:T.textDim,letterSpacing:"0.14em",margin:"0 0 3px",textTransform:"uppercase"}}>{t("КЪДЕ ДА ОТИДЕШ")}</p>
           <p style={{fontFamily:F.serif,fontSize:16,color:T.text,fontWeight:400,margin:"0 0 2px"}}>{venue.name}</p>
           <p style={{fontFamily:F.mono,fontSize:10,color:T.textMuted,margin:0,letterSpacing:"0.06em",textTransform:"uppercase"}}>{venue.type}</p>
         </div>
@@ -695,7 +735,7 @@ function OutfitsTab({items,onSave,weather,blacklist,addBlacklist,saved,onDeleteS
       {/* Actions — editorial buttons */}
       <div style={{display:"flex",gap:8}}>
         <button onClick={next} style={{flex:1,padding:"16px 0",borderRadius:3,border:"1px solid "+T.border,background:"transparent",fontFamily:F.sans,fontSize:11,color:T.textMuted,cursor:"pointer",letterSpacing:"0.1em",fontWeight:500,transition:"all 0.3s"}}>{t("Следваща")}</button>
-        <button onClick={()=>{onSave({id:Date.now().toString(),occasion:OCCASIONS.find(x=>x.id===occ)?.label||occ,itemIds:cur.items.map(i=>i.id),reasoning:getExplanation(cur,occ),tips:getTip(occ),score:cur.score,savedAt:new Date().toISOString()});toast(t("Визия запазена ✓"),"success");}} style={{flex:1,padding:"16px 0",borderRadius:3,border:"none",background:T.text,color:T.bg,fontFamily:F.sans,fontSize:11,fontWeight:600,cursor:"pointer",letterSpacing:"0.12em",transition:"all 0.3s"}}>{t("Запази")}</button>
+        <button onClick={()=>{onSave({id:Date.now().toString(),occasion:OCCASIONS.find(x=>x.id===occ)?.label||occ,itemIds:cur.items.map(i=>i.id),reasoning:getExplanation(cur,occ,t),tips:getTip(occ,lang),score:cur.score,savedAt:new Date().toISOString()});toast(t("Визия запазена ✓"),"success");}} style={{flex:1,padding:"16px 0",borderRadius:3,border:"none",background:T.text,color:T.bg,fontFamily:F.sans,fontSize:11,fontWeight:600,cursor:"pointer",letterSpacing:"0.12em",transition:"all 0.3s"}}>{t("Запази")}</button>
       </div>
       <div style={{display:"flex",gap:8,marginTop:8}}>
         <button onClick={()=>shareOutfit(cur)} style={{flex:1,padding:"14px 0",borderRadius:3,border:"1px solid "+T.border,background:"transparent",fontFamily:F.mono,fontSize:10,color:T.textDim,cursor:"pointer",letterSpacing:"0.08em"}}>{t("СПОДЕЛИ")}</button>
@@ -796,15 +836,15 @@ function InsightsTab({items,saved,calendar}){
   if(items.length===0)return(<EmptyState icon="\u25CB" title={t("Добави дрехи за анализ")} sub={t("ПОРТРЕТЪТ ЩЕ СЕ ПОЯВИ ТУК")}/>);
   const Section=({title,children})=>(<div style={{background:T.subtleBg,borderLeft:"2px solid "+T.text,padding:"18px 22px",marginBottom:16}}><p style={{fontFamily:F.mono,fontSize:10,color:T.textDim,letterSpacing:"0.16em",margin:"0 0 14px"}}>{title}</p>{children}</div>);
   return(<div style={{padding:"28px 20px 100px"}}><p style={{fontFamily:F.mono,fontSize:10,letterSpacing:"0.3em",color:T.textDim,marginBottom:8}}>{t("АНАЛИЗ НА ГАРДЕРОБА")}</p><h2 style={{fontFamily:F.serif,fontSize:34,fontWeight:300,color:T.text,margin:"0 0 6px",letterSpacing:"-0.02em"}}>{t("Портрет")}</h2><div style={{width:40,height:1,background:"linear-gradient(90deg, "+T.text+" 0%, transparent 100%)",marginBottom:24}}/>
-    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(80px,1fr))",gap:6,marginBottom:18}}>{[{n:items.length,l:t("ДРЕХИ")},{n:totalWears,l:t("НОСЕНИЯ")},{n:saved.length,l:t("ВИЗИИ")},{n:totalValue>0?cur+totalValue:"\u2014",l:t("СТОЙНОСТ")}].map((d,i)=><div key={i} style={{background:T.subtleBg,border:"1px solid "+T.border,borderRadius:4,padding:"18px 8px",textAlign:"center"}}><p style={{fontFamily:F.mono,fontSize:24,color:T.text,margin:"0 0 3px",fontWeight:400}}>{d.n}</p><p style={{fontFamily:F.mono,fontSize:10,color:T.textDim,letterSpacing:"0.14em",margin:0}}>{d.l}</p></div>)}</div>
+    <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6,marginBottom:18}}>{[{n:items.length,l:t("ДРЕХИ")},{n:totalWears,l:t("НОСЕНИЯ")},{n:saved.length,l:t("ВИЗИИ")},{n:totalValue>0?cur+totalValue:"—",l:t("СТОЙНОСТ")}].map((d,i)=><div key={i} style={{background:T.subtleBg,border:"1px solid "+T.border,borderRadius:4,padding:"16px 4px",textAlign:"center"}}><p style={{fontFamily:F.mono,fontSize:20,color:T.text,margin:"0 0 3px",fontWeight:400}}>{d.n}</p><p style={{fontFamily:F.mono,fontSize:8,color:T.textDim,letterSpacing:"0.1em",margin:0}}>{d.l}</p></div>)}</div>
 
     {items.length>=5&&<Section title={t("УСТОЙЧИВОСТ")}><div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:10}}><span style={{fontFamily:F.serif,fontSize:36,color:T.text,fontWeight:300}}>{susScore}%</span><span style={{fontFamily:F.mono,fontSize:10,color:T.textDim,letterSpacing:"0.08em"}}>{t("АКТИВЕН ГАРДЕРОБ")}</span></div><div style={{height:4,background:T.border,borderRadius:2,overflow:"hidden",marginBottom:8}}><div style={{width:susScore+"%",height:"100%",background:susScore>=70?T.successText:susScore>=40?T.washWarn:T.dangerText,borderRadius:2,transition:"width 0.5s"}}/></div><div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontFamily:F.mono,fontSize:9,color:T.textDim,letterSpacing:"0.06em"}}>{activeItems30} / {items.length} {t("последни 30 дни")}</span><span style={{fontFamily:F.mono,fontSize:9,color:T.textDim,letterSpacing:"0.06em"}}>{activeItems60} / {items.length} {t("последни 60 дни")}</span></div></Section>}
 
-    <Section title={t("СЪСТАВ")}>{catBreakdown.map(c=><div key={c.id} style={{marginBottom:10}}><div style={{display:"flex",justifyContent:"space-between",marginBottom:3}}><span style={{fontFamily:F.sans,fontSize:11,color:T.textSoft}}>{c.label}</span><span style={{fontFamily:F.mono,fontSize:11,color:T.textDim}}>{c.count}{c.value>0?" \u00B7 "+cur+c.value:""}</span></div><div style={{height:2,background:T.border,borderRadius:1,overflow:"hidden"}}><div style={{width:(c.count/maxCat*100)+"%",height:"100%",background:T.text,borderRadius:1}}/></div></div>)}</Section>
+    <Section title={t("СЪСТАВ")}>{catBreakdown.map(c=><div key={c.id} style={{marginBottom:10}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:4}}><span style={{fontFamily:F.sans,fontSize:12,color:T.textSoft}}>{t(c.label)}</span><span style={{fontFamily:F.mono,fontSize:10,color:T.textDim}}>{c.count}{c.value>0?" · "+cur+c.value:""}</span></div><div style={{height:3,background:T.border,borderRadius:2,overflow:"hidden"}}><div style={{width:(c.count/maxCat*100)+"%",height:"100%",background:T.text,borderRadius:2,transition:"width 0.5s"}}/></div></div>)}</Section>
 
-    {totalValue>0&&<Section title={t("СТОЙНОСТ НА ГАРДЕРОБА")}><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:14}}><div style={{textAlign:"center",padding:"12px 0"}}><p style={{fontFamily:F.serif,fontSize:24,color:T.text,margin:"0 0 2px",fontWeight:300}}>{cur}{totalValue}</p><p style={{fontFamily:F.mono,fontSize:9,color:T.textDim,letterSpacing:"0.1em",margin:0}}>{t("ОБЩА СТОЙНОСТ")}</p></div><div style={{textAlign:"center",padding:"12px 0"}}><p style={{fontFamily:F.serif,fontSize:24,color:T.text,margin:"0 0 2px",fontWeight:300}}>{cur}{avgCPW}</p><p style={{fontFamily:F.mono,fontSize:9,color:T.textDim,letterSpacing:"0.1em",margin:0}}>{t("СР. ЦЕНА / НОСЕНЕ")}</p></div></div>{mostExpCat&&<div style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderTop:"1px solid "+T.border}}><span style={{fontFamily:F.sans,fontSize:11,color:T.textSoft}}>{t("Най-скъпа категория")}</span><span style={{fontFamily:F.mono,fontSize:10,color:T.textDim}}>{mostExpCat.label} {cur}{mostExpCat.value}</span></div>}{leastExpCat&&leastExpCat.value>0&&<div style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderTop:"1px solid "+T.border}}><span style={{fontFamily:F.sans,fontSize:11,color:T.textSoft}}>{t("Най-евтина категория")}</span><span style={{fontFamily:F.mono,fontSize:10,color:T.textDim}}>{leastExpCat.label} {cur}{leastExpCat.value}</span></div>}<div style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderTop:"1px solid "+T.border}}><span style={{fontFamily:F.sans,fontSize:11,color:T.textSoft}}>{t("Средна цена на артикул")}</span><span style={{fontFamily:F.mono,fontSize:10,color:T.textDim}}>{cur}{avgItemValue}</span></div>{worstCPW.length>0&&<><div style={{margin:"12px 0 8px"}}><span style={{fontFamily:F.mono,fontSize:9,color:T.textDim,letterSpacing:"0.14em"}}>{t("НАЙ-СКЪПО НОСЕНЕ")}</span></div>{worstCPW.map((item,i)=><div key={item.id} style={{display:"flex",alignItems:"center",gap:10,padding:"5px 0",borderBottom:i<worstCPW.length-1?"1px solid "+T.border:"none"}}>{item.image?<img src={item.image} alt="" style={{width:28,height:28,borderRadius:2,objectFit:"cover"}}/>:<div style={{width:28,height:28,borderRadius:2,background:T.surface}}/>}<span style={{fontFamily:F.sans,fontSize:11,color:T.text,flex:1}}>{item.name}</span><span style={{fontFamily:F.mono,fontSize:10,color:T.washWarn}}>{cur}{item.cpw}{t("/носене")}</span></div>)}</>}</Section>}
+    {totalValue>0&&<Section title={t("СТОЙНОСТ НА ГАРДЕРОБА")}><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:14}}><div style={{textAlign:"center",padding:"12px 0",background:T.bg,borderRadius:4,border:"1px solid "+T.border}}><p style={{fontFamily:F.mono,fontSize:20,color:T.text,margin:"0 0 2px",fontWeight:400}}>{cur}{totalValue}</p><p style={{fontFamily:F.mono,fontSize:8,color:T.textDim,letterSpacing:"0.1em",margin:0}}>{t("ОБЩА СТОЙНОСТ")}</p></div><div style={{textAlign:"center",padding:"12px 0",background:T.bg,borderRadius:4,border:"1px solid "+T.border}}><p style={{fontFamily:F.mono,fontSize:20,color:T.text,margin:"0 0 2px",fontWeight:400}}>{cur}{avgCPW}</p><p style={{fontFamily:F.mono,fontSize:8,color:T.textDim,letterSpacing:"0.1em",margin:0}}>{t("СР. ЦЕНА/НОСЕНЕ")}</p></div></div>{mostExpCat&&<div style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderTop:"1px solid "+T.border}}><span style={{fontFamily:F.sans,fontSize:11,color:T.textSoft}}>{t("Най-скъпа категория")}</span><span style={{fontFamily:F.mono,fontSize:10,color:T.textDim}}>{t(mostExpCat.label)} {cur}{mostExpCat.value}</span></div>}{leastExpCat&&leastExpCat.value>0&&<div style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderTop:"1px solid "+T.border}}><span style={{fontFamily:F.sans,fontSize:11,color:T.textSoft}}>{t("Най-евтина категория")}</span><span style={{fontFamily:F.mono,fontSize:10,color:T.textDim}}>{t(leastExpCat.label)} {cur}{leastExpCat.value}</span></div>}<div style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderTop:"1px solid "+T.border}}><span style={{fontFamily:F.sans,fontSize:11,color:T.textSoft}}>{t("Средна цена на артикул")}</span><span style={{fontFamily:F.mono,fontSize:10,color:T.textDim}}>{cur}{avgItemValue}</span></div>{worstCPW.length>0&&<><div style={{margin:"12px 0 8px"}}><span style={{fontFamily:F.mono,fontSize:9,color:T.textDim,letterSpacing:"0.14em"}}>{t("НАЙ-СКЪПО НОСЕНЕ")}</span></div>{worstCPW.map((item,i)=><div key={item.id} style={{display:"flex",alignItems:"center",gap:10,padding:"5px 0",borderBottom:i<worstCPW.length-1?"1px solid "+T.border:"none"}}>{item.image?<img src={item.image} alt="" style={{width:28,height:28,borderRadius:2,objectFit:"cover"}}/>:<div style={{width:28,height:28,borderRadius:2,background:T.surface}}/>}<span style={{fontFamily:F.sans,fontSize:11,color:T.text,flex:1}}>{item.name}</span><span style={{fontFamily:F.mono,fontSize:10,color:T.washWarn}}>{cur}{item.cpw}{t("/носене")}</span></div>)}</>}</Section>}
 
-    {topColors.length>0&&<Section title={t("ЦВЕТОВА ПАЛИТРА")}><div style={{display:"flex",gap:3,marginBottom:10,height:24}}>{topColors.map(([hex],i)=><div key={i} style={{flex:1,background:hex,borderRadius:2,border:hex==="#FFFFFF"?"1px solid "+T.border:"none"}}/>)}</div><div style={{display:"flex",gap:5,flexWrap:"wrap"}}>{topColors.map(([hex,count])=><span key={hex} style={{fontFamily:F.mono,fontSize:10,color:T.textDim}}>{getColorName(hex)} {"\u00D7"}{count}</span>)}</div></Section>}
+    {topColors.length>0&&<Section title={t("ЦВЕТОВА ПАЛИТРА")}><div style={{display:"flex",gap:3,marginBottom:10,height:24}}>{topColors.map(([hex],i)=><div key={i} style={{flex:1,background:hex,borderRadius:2,border:hex==="#FFFFFF"?"1px solid "+T.border:"none"}}/>)}</div><div style={{display:"flex",gap:5,flexWrap:"wrap"}}>{topColors.map(([hex,count])=><span key={hex} style={{fontFamily:F.mono,fontSize:10,color:T.textDim}}>{t(getColorName(hex))} {"\u00D7"}{count}</span>)}</div></Section>}
 
     {styleBreakdown.length>0&&<Section title={t("СТИЛ ДНК")}><div style={{display:"flex",flexWrap:"wrap",gap:5}}>{styleBreakdown.map(s=><div key={s.id} style={{border:"1px solid "+T.border,padding:"5px 10px",borderRadius:2,display:"flex",alignItems:"center",gap:6}}><span style={{fontFamily:F.sans,fontSize:11,color:T.textSoft}}>{s.label}</span><span style={{fontFamily:F.mono,fontSize:11,color:T.textDim}}>{s.count}</span></div>)}</div></Section>}
 
@@ -824,7 +864,7 @@ function InsightsTab({items,saved,calendar}){
 
     {Object.keys(calendar||{}).length>0&&<Section title={t("АКТИВНОСТ")+(" \u2014 90 "+t("ДНИ"))}><div style={{display:"flex",justifyContent:"space-between",marginBottom:10}}><span style={{fontFamily:F.mono,fontSize:10,color:T.textDim}}>{totalActiveDays} {t("активни дни")}</span><span style={{fontFamily:F.mono,fontSize:10,color:T.textDim}}>{heatmapData.reduce((a,d)=>a+d.count,0)} {t("общо")}</span></div><div style={{display:"grid",gridTemplateColumns:"repeat(13,1fr)",gap:2,marginBottom:6}}>{heatmapData.map((d,i)=>{const intensity=d.count===0?0:Math.max(0.2,d.count/maxDayWears);return<div key={i} style={{aspectRatio:"1",borderRadius:1,background:d.count===0?T.subtleBg:T.text,opacity:d.count===0?1:intensity,border:d.count===0?"1px solid "+T.border:"none"}} title={d.date+": "+d.count}/>;})}</div><div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontFamily:F.mono,fontSize:8,color:T.textDim}}>{heatmapData[0]?.date.slice(5)}</span><div style={{display:"flex",alignItems:"center",gap:3}}><span style={{fontFamily:F.mono,fontSize:8,color:T.textDim}}>{t("малко")}</span>{[0,0.25,0.5,0.75,1].map((o,i)=><div key={i} style={{width:8,height:8,borderRadius:1,background:o===0?T.subtleBg:T.text,opacity:o===0?1:o,border:o===0?"1px solid "+T.border:"none"}}/>)}<span style={{fontFamily:F.mono,fontSize:8,color:T.textDim}}>{t("много")}</span></div><span style={{fontFamily:F.mono,fontSize:8,color:T.textDim}}>{t("днес")}</span></div></Section>}
 
-    {Object.keys(calendar||{}).length>0&&<Section title={t("СЕРИЯ")}><div style={{display:"flex",gap:16,marginBottom:4}}><div style={{flex:1,textAlign:"center"}}><p style={{fontFamily:F.serif,fontSize:36,color:T.text,margin:"0 0 2px",fontWeight:300}}>{streakData.current}</p><p style={{fontFamily:F.mono,fontSize:9,color:T.textDim,letterSpacing:"0.1em",margin:0}}>{t("ТЕКУЩА СЕРИЯ")}</p></div><div style={{width:1,background:T.border}}/><div style={{flex:1,textAlign:"center"}}><p style={{fontFamily:F.serif,fontSize:36,color:streakData.current>=streakData.longest&&streakData.longest>0?T.successText:T.text,margin:"0 0 2px",fontWeight:300}}>{streakData.longest}</p><p style={{fontFamily:F.mono,fontSize:9,color:T.textDim,letterSpacing:"0.1em",margin:0}}>{t("НАЙ-ДЪЛГА СЕРИЯ")}</p></div></div></Section>}
+    {Object.keys(calendar||{}).length>0&&<Section title={t("СЕРИЯ")}><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:4}}><div style={{textAlign:"center",padding:"12px 0",background:T.bg,borderRadius:4,border:"1px solid "+T.border}}><p style={{fontFamily:F.serif,fontSize:28,color:T.text,margin:"0 0 2px",fontWeight:300}}>{streakData.current}</p><p style={{fontFamily:F.mono,fontSize:8,color:T.textDim,letterSpacing:"0.1em",margin:0}}>{t("ТЕКУЩА СЕРИЯ")}</p></div><div style={{textAlign:"center",padding:"12px 0",background:T.bg,borderRadius:4,border:"1px solid "+T.border}}><p style={{fontFamily:F.serif,fontSize:28,color:streakData.current>=streakData.longest&&streakData.longest>0?T.successText:T.text,margin:"0 0 2px",fontWeight:300}}>{streakData.longest}</p><p style={{fontFamily:F.mono,fontSize:8,color:T.textDim,letterSpacing:"0.1em",margin:0}}>{t("НАЙ-ДЪЛГА СЕРИЯ")}</p></div></div></Section>}
 
     <Section title={t("СЕДМИЧНО ПРЕДИЗВИКАТЕЛСТВО")}>{challenges.map((ch,i)=><div key={i} style={{padding:"10px 0",borderBottom:i<challenges.length-1?"1px solid "+T.border:"none",opacity:ch.done?0.6:1}}><div style={{display:"flex",alignItems:"center",gap:10,marginBottom:6}}><span style={{fontFamily:F.mono,fontSize:14,color:ch.done?T.successText:T.textDim,width:22,textAlign:"center"}}>{ch.done?"\u2713":ch.icon}</span><div style={{flex:1}}><p style={{fontFamily:F.sans,fontSize:11,color:T.text,margin:0,textDecoration:ch.done?"line-through":"none"}}>{ch.title}</p><p style={{fontFamily:F.mono,fontSize:9,color:T.textDim,margin:"2px 0 0",letterSpacing:"0.06em"}}>{ch.desc}</p></div><span style={{fontFamily:F.mono,fontSize:10,color:ch.done?T.successText:T.textDim}}>{ch.done?"\u2713":ch.progress+"/"+ch.max}</span></div><div style={{marginLeft:32,height:2,background:T.border,borderRadius:1,overflow:"hidden"}}><div style={{width:(Math.min(ch.progress,ch.max)/ch.max*100)+"%",height:"100%",background:ch.done?T.successText:T.text,borderRadius:1,transition:"width 0.5s"}}/></div></div>)}<p style={{fontFamily:F.mono,fontSize:9,color:T.textDim,letterSpacing:"0.08em",marginTop:10,textAlign:"center"}}>{t("Обновява се всеки понеделник")}</p></Section>
 
@@ -844,7 +884,7 @@ function AuthScreen(){
   return(<div style={{minHeight:"100dvh",background:T.bg,display:"flex",flexDirection:"column",justifyContent:"center",padding:"0 28px"}}>
     <div style={{marginBottom:48}}><Logo size={28}/><p style={{fontFamily:F.serif,fontSize:18,color:T.textMuted,margin:"12px 0 0",fontWeight:300,letterSpacing:"-0.01em"}}>{mode==="login"?t("Добре дошъл обратно"):mode==="register"?t("Създай своя гардероб"):t("Възстанови парола")}</p><div style={{width:40,height:1,background:"linear-gradient(90deg, "+T.text+" 0%, transparent 100%)",marginTop:16}}/></div>
     {error&&<div style={{padding:"12px 16px",borderRadius:3,border:"1px solid "+T.danger,marginBottom:16,fontFamily:F.sans,fontSize:12,color:T.dangerText}}>{error}</div>}
-    {resetSent&&<div style={{padding:"12px 16px",borderRadius:3,border:"1px solid "+T.border,marginBottom:16,fontFamily:F.sans,fontSize:12,color:T.textSoft}}>Изпратен е имейл за възстановяване.</div>}
+    {resetSent&&<div style={{padding:"12px 16px",borderRadius:3,border:"1px solid "+T.border,marginBottom:16,fontFamily:F.sans,fontSize:12,color:T.textSoft}}>{t("Изпратен е имейл за възстановяване.")}</div>}
     {mode==="register"&&<input value={name} onChange={e=>setName(e.target.value)} placeholder={t("Твоето име")} style={inputSt}/>}
     {mode!=="reset"||!resetSent?<>
       <input value={email} onChange={e=>setEmail(e.target.value)} placeholder={t("Имейл")} type="email" autoComplete="email" style={inputSt}/>
@@ -855,15 +895,20 @@ function AuthScreen(){
     {mode!=="reset"&&<><div style={{display:"flex",alignItems:"center",gap:14,margin:"8px 0 20px"}}><div style={{flex:1,height:1,background:T.border}}/><span style={{fontFamily:F.mono,fontSize:10,color:T.textDim}}>{t("ИЛИ")}</span><div style={{flex:1,height:1,background:T.border}}/></div>
     <button onClick={async()=>{if(mode==="register"&&!consent){setError(t("Моля, приеми Общите условия"));return;}setBusy(true);try{await loginGoogle();}catch(e){console.warn(e);}finally{setBusy(false);}}} style={{width:"100%",padding:14,borderRadius:3,border:"1px solid "+T.border,background:"transparent",fontFamily:F.sans,fontSize:12,fontWeight:500,color:T.text,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:10,marginBottom:16}}>
       <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-      Продължи с Google
+      {t("Продължи с Google")}
     </button></>}
     <div style={{display:"flex",justifyContent:"center",gap:16,marginTop:8}}>
-      {mode==="login"&&<><button onClick={()=>{setMode("register");setError(null);}} style={{background:"none",border:"none",color:T.textMuted,fontFamily:F.mono,fontSize:11,cursor:"pointer",letterSpacing:"0.06em"}}>СЪЗДАЙ АКАУНТ</button><button onClick={()=>{setMode("reset");setError(null);}} style={{background:"none",border:"none",color:T.textDim,fontFamily:F.mono,fontSize:11,cursor:"pointer",letterSpacing:"0.06em"}}>ЗАБРАВЕНА ПАРОЛА</button></>}
-      {mode!=="login"&&<button onClick={()=>{setMode("login");setError(null);setResetSent(false);}} style={{background:"none",border:"none",color:T.textMuted,fontFamily:F.mono,fontSize:11,cursor:"pointer",letterSpacing:"0.06em"}}>ОБРАТНО КЪМ ВХОД</button>}
+      {mode==="login"&&<><button onClick={()=>{setMode("register");setError(null);}} style={{background:"none",border:"none",color:T.textMuted,fontFamily:F.mono,fontSize:11,cursor:"pointer",letterSpacing:"0.06em"}}>{t("СЪЗДАЙ АКАУНТ")}</button><button onClick={()=>{setMode("reset");setError(null);}} style={{background:"none",border:"none",color:T.textDim,fontFamily:F.mono,fontSize:11,cursor:"pointer",letterSpacing:"0.06em"}}>{t("ЗАБРАВЕНА ПАРОЛА")}</button></>}
+      {mode!=="login"&&<button onClick={()=>{setMode("login");setError(null);setResetSent(false);}} style={{background:"none",border:"none",color:T.textMuted,fontFamily:F.mono,fontSize:11,cursor:"pointer",letterSpacing:"0.06em"}}>{t("ОБРАТНО КЪМ ВХОД")}</button>}
     </div>
     {showLegal&&<LegalPage type={showLegal} onClose={()=>setShowLegal(null)}/>}
   </div>);
 }
+
+// === Profile Sub-components (outside ProfileTab to prevent remounting) ===
+function PSection({title,children}){const T=useTheme();return(<div style={{background:T.subtleBg,borderLeft:"2px solid "+T.text,padding:"18px 22px",marginBottom:16}}><p style={{fontFamily:F.mono,fontSize:10,color:T.textDim,letterSpacing:"0.16em",margin:"0 0 14px"}}>{title}</p>{children}</div>);}
+function PRow({label,value,editing,fieldVal,onEdit,onFieldChange,onSave,inputSt}){const T=useTheme();return(<div role="button" tabIndex={0} onClick={onEdit} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"12px 0",borderBottom:"1px solid "+T.border,cursor:"pointer",WebkitTapHighlightColor:"transparent",touchAction:"manipulation"}}><span style={{fontFamily:F.serif,fontSize:13,color:T.text,fontWeight:300}}>{label}</span>{editing?<div style={{display:"flex",gap:4}} onClick={e=>e.stopPropagation()}><input value={fieldVal} onChange={e=>onFieldChange(e.target.value)} style={{...inputSt,width:100,padding:"6px 12px",fontSize:11,marginBottom:0}} autoFocus onKeyDown={e=>{if(e.key==="Enter")onSave();}}/><button onClick={onSave} style={{padding:"0 12px",borderRadius:100,border:"1px solid "+T.text,background:"transparent",color:T.text,fontFamily:F.mono,fontSize:10,cursor:"pointer"}}>OK</button></div>:<span style={{fontFamily:F.mono,fontSize:10,color:T.textDim}}>{value||"—"} ›</span>}</div>);}
+function PToggle({label,value,onChange}){const T=useTheme();return(<div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"12px 0",borderBottom:"1px solid "+T.border}}><span style={{fontFamily:F.serif,fontSize:13,color:T.text,fontWeight:300}}>{label}</span><button onClick={()=>onChange(!value)} style={{width:44,height:24,borderRadius:12,border:"none",background:value?T.text:T.border,cursor:"pointer",position:"relative",transition:"all 0.3s"}}><div style={{width:18,height:18,borderRadius:9,background:value?T.bg:T.textDim,position:"absolute",top:3,left:value?23:3,transition:"all 0.3s"}}/></button></div>);}
 
 // === Profile Tab ===
 function ProfileTab(){
@@ -875,9 +920,8 @@ function ProfileTab(){
   const[showDelete,setShowDelete]=useState(false);const[delPass,setDelPass]=useState("");const[busy,setBusy]=useState(false);
   const fileRef=useRef(null);
   const inputSt={width:"100%",padding:"12px 16px",borderRadius:2,border:"1px solid "+T.border,fontSize:13,fontFamily:F.sans,color:T.text,background:T.surface,boxSizing:"border-box"};
-  const Section=({title,children})=>(<div style={{background:T.subtleBg,borderLeft:"2px solid "+T.text,padding:"18px 22px",marginBottom:16}}><p style={{fontFamily:F.mono,fontSize:10,color:T.textDim,letterSpacing:"0.16em",margin:"0 0 14px"}}>{title}</p>{children}</div>);
-  const Row=({label,value,field})=>(<div onClick={()=>{setEditField(field);setFieldVal(profile[field]||"");}} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"12px 0",borderBottom:"1px solid "+T.border,cursor:"pointer"}}><span style={{fontFamily:F.serif,fontSize:13,color:T.text,fontWeight:300}}>{label}</span>{editField===field?<div style={{display:"flex",gap:4}} onClick={e=>e.stopPropagation()}><input value={fieldVal} onChange={e=>setFieldVal(e.target.value)} style={{...inputSt,width:100,padding:"6px 12px",fontSize:11,marginBottom:0}} autoFocus onKeyDown={e=>{if(e.key==="Enter"){saveProfile({[field]:fieldVal});setEditField(null);toast(t("Запазено"),"success");}}} /><button onClick={()=>{saveProfile({[field]:fieldVal});setEditField(null);toast(t("Запазено"),"success");}} style={{padding:"0 12px",borderRadius:100,border:"1px solid "+T.text,background:"transparent",color:T.text,fontFamily:F.mono,fontSize:10,cursor:"pointer"}}>OK</button></div>:<span style={{fontFamily:F.mono,fontSize:10,color:T.textDim}}>{value||"—"} ›</span>}</div>);
-  const Toggle=({label,value,onChange})=>(<div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"12px 0",borderBottom:"1px solid "+T.border}}><span style={{fontFamily:F.serif,fontSize:13,color:T.text,fontWeight:300}}>{label}</span><button onClick={()=>onChange(!value)} style={{width:44,height:24,borderRadius:12,border:"none",background:value?T.text:T.border,cursor:"pointer",position:"relative",transition:"all 0.3s"}}><div style={{width:18,height:18,borderRadius:9,background:value?T.bg:T.textDim,position:"absolute",top:3,left:value?23:3,transition:"all 0.3s"}}/></button></div>);
+  const handleRowEdit=(field)=>{setEditField(field);setFieldVal(profile[field]||"");};
+  const handleRowSave=async(field)=>{const ok=await saveProfile({[field]:fieldVal});setEditField(null);toast(ok!==false?t("Запазено"):t("Грешка при запазване"),ok!==false?"success":"error");};
   const handlePhoto=async(e)=>{const f=e.target.files?.[0];if(!f)return;setBusy(true);try{await uploadPhoto(f);toast(t("Снимката е качена"),"success");}catch(e){console.warn(e);}finally{setBusy(false);}};
   const handleExport=async()=>{const data=await exportData();if(!data)return;const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="dreshnik-export-"+new Date().toISOString().slice(0,10)+".json";a.click();URL.revokeObjectURL(url);toast(t("Данните са експортирани"),"success");};
   const handleDelete=async()=>{setBusy(true);try{await deleteAccount(delPass);}catch(e){console.warn(e);}finally{setBusy(false);}};
@@ -889,42 +933,42 @@ function ProfileTab(){
       </div>
       <input ref={fileRef} type="file" accept="image/*" onChange={handlePhoto} style={{display:"none"}}/>
       <div style={{flex:1}}>
-        {editName?<div style={{display:"flex",gap:6}}><input value={nameVal} onChange={e=>setNameVal(e.target.value)} style={{...inputSt,flex:1,marginBottom:0}} autoFocus/><button onClick={()=>{saveProfile({displayName:nameVal});setEditName(false);toast(t("Запазено"),"success");}} style={{padding:"0 14px",borderRadius:2,border:"1px solid "+T.text,background:"transparent",color:T.text,fontFamily:F.mono,fontSize:11,cursor:"pointer"}}>OK</button></div>:
-        <p onClick={()=>setEditName(true)} style={{fontFamily:F.serif,fontSize:22,color:T.text,fontWeight:400,margin:0,cursor:"pointer"}}>{profile?.displayName||user?.displayName||t("Задай име")}</p>}
+        {editName?<div style={{display:"flex",gap:6}}><input value={nameVal} onChange={e=>setNameVal(e.target.value)} style={{...inputSt,flex:1,marginBottom:0}} autoFocus/><button onClick={async()=>{const ok=await saveProfile({displayName:nameVal});setEditName(false);toast(ok!==false?t("Запазено"):t("Грешка при запазване"),ok!==false?"success":"error");}} style={{padding:"0 14px",borderRadius:2,border:"1px solid "+T.text,background:"transparent",color:T.text,fontFamily:F.mono,fontSize:11,cursor:"pointer"}}>OK</button></div>:
+        <p role="button" tabIndex={0} onClick={()=>setEditName(true)} onKeyDown={e=>{if(e.key==="Enter")setEditName(true);}} style={{fontFamily:F.serif,fontSize:22,color:T.text,fontWeight:400,margin:0,cursor:"pointer",WebkitTapHighlightColor:"transparent",touchAction:"manipulation"}}>{profile?.displayName||user?.displayName||t("Задай име")}</p>}
         <p style={{fontFamily:F.mono,fontSize:10,color:T.textDim,margin:"4px 0 0"}}>{user?.email}</p>
         {isGoogle&&<span style={{fontFamily:F.mono,fontSize:10,color:T.textDim,border:"1px solid "+T.border,padding:"2px 8px",borderRadius:2,marginTop:4,display:"inline-block"}}>GOOGLE</span>}
       </div>
     </div>
-    <Section title={t("БИО")}>
-      {editBio?<div><textarea value={bioVal} onChange={e=>setBioVal(e.target.value)} rows={3} style={{...inputSt,resize:"none",marginBottom:8}} placeholder={t("Разкажи за стила си...")}/><button onClick={()=>{saveProfile({bio:bioVal});setEditBio(false);toast(t("Запазено"),"success");}} style={{padding:"8px 16px",borderRadius:2,border:"1px solid "+T.text,background:"transparent",color:T.text,fontFamily:F.mono,fontSize:11,cursor:"pointer"}}>{t("ЗАПАЗИ")}</button></div>:
-      <p onClick={()=>setEditBio(true)} style={{fontFamily:F.sans,fontSize:12,color:profile.bio?T.textSoft:T.textDim,margin:0,cursor:"pointer",lineHeight:1.6}}>{profile.bio||t("Натисни за да добавиш био...")}</p>}
-    </Section>
-    <Section title={t("СТИЛ")}>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:5,marginBottom:14}}>{STYLES.map((s,i)=>{const id=STYLE_IDS[i];const active=profile.preferredStyles?.includes(id);return<button key={i} onClick={()=>{const cur=profile.preferredStyles||[];saveProfile({preferredStyles:active?cur.filter(x=>x!==id):[...cur,id]});}} style={{padding:"8px 4px",borderRadius:100,border:active?"1px solid "+T.text:"1px solid "+T.pillBorder,background:active?T.text:T.pillBg,color:active?T.bg:T.textMuted,fontFamily:F.serif,fontSize:11,fontWeight:active?500:300,cursor:"pointer",transition:"all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",letterSpacing:"0.02em",textAlign:"center",width:"100%"}}>{s}</button>})}</div>
-      <Row label={t("Горнище")} value={profile.topSize} field="topSize"/>
-      <Row label={t("Долнище")} value={profile.bottomSize} field="bottomSize"/>
-      <Row label={t("Обувки")} value={profile.shoeSize} field="shoeSize"/>
-    </Section>
-    <Section title={t("НАСТРОЙКИ")}>
-      <Toggle label={t("Сезонна ротация")} value={settings.seasonalRotation} onChange={v=>saveSettings({seasonalRotation:v})}/>
-      <Toggle label={t("Сутрешно предложение")} value={settings.notifyMorningOutfit} onChange={v=>saveSettings({notifyMorningOutfit:v})}/>
-      <Toggle label={t("Седмичен отчет")} value={settings.notifyWeeklyReport} onChange={v=>saveSettings({notifyWeeklyReport:v})}/>
-      <Toggle label={t("Публичен гардероб")} value={profile.isPublic} onChange={v=>saveProfile({isPublic:v})}/>
+    <PSection title={t("БИО")}>
+      {editBio?<div><textarea value={bioVal} onChange={e=>setBioVal(e.target.value)} rows={3} style={{...inputSt,resize:"none",marginBottom:8}} placeholder={t("Разкажи за стила си...")}/><button onClick={async()=>{const ok=await saveProfile({bio:bioVal});setEditBio(false);toast(ok!==false?t("Запазено"):t("Грешка при запазване"),ok!==false?"success":"error");}} style={{padding:"8px 16px",borderRadius:2,border:"1px solid "+T.text,background:"transparent",color:T.text,fontFamily:F.mono,fontSize:11,cursor:"pointer",touchAction:"manipulation"}}>{t("ЗАПАЗИ")}</button></div>:
+      <p role="button" tabIndex={0} onClick={()=>setEditBio(true)} style={{fontFamily:F.sans,fontSize:12,color:profile.bio?T.textSoft:T.textDim,margin:0,cursor:"pointer",lineHeight:1.6,WebkitTapHighlightColor:"transparent",touchAction:"manipulation"}}>{profile.bio||t("Натисни за да добавиш био...")}</p>}
+    </PSection>
+    <PSection title={t("СТИЛ")}>
+      <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:14}}>{STYLES.map((s,i)=>{const id=STYLE_IDS[i];const active=profile.preferredStyles?.includes(id);return<button key={i} onClick={()=>{const cur=profile.preferredStyles||[];saveProfile({preferredStyles:active?cur.filter(x=>x!==id):[...cur,id]});}} style={{padding:"8px 14px",borderRadius:100,border:active?"1px solid "+T.text:"1px solid "+T.pillBorder,background:active?T.text:T.pillBg,color:active?T.bg:T.textMuted,fontFamily:F.serif,fontSize:11,fontWeight:active?500:300,cursor:"pointer",transition:"all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",letterSpacing:"0.02em",whiteSpace:"nowrap",WebkitTapHighlightColor:"transparent",touchAction:"manipulation"}}>{s}</button>})}</div>
+      <PRow label={t("Горнище")} value={profile.topSize} editing={editField==="topSize"} fieldVal={fieldVal} onEdit={()=>handleRowEdit("topSize")} onFieldChange={setFieldVal} onSave={()=>handleRowSave("topSize")} inputSt={inputSt}/>
+      <PRow label={t("Долнище")} value={profile.bottomSize} editing={editField==="bottomSize"} fieldVal={fieldVal} onEdit={()=>handleRowEdit("bottomSize")} onFieldChange={setFieldVal} onSave={()=>handleRowSave("bottomSize")} inputSt={inputSt}/>
+      <PRow label={t("Обувки")} value={profile.shoeSize} editing={editField==="shoeSize"} fieldVal={fieldVal} onEdit={()=>handleRowEdit("shoeSize")} onFieldChange={setFieldVal} onSave={()=>handleRowSave("shoeSize")} inputSt={inputSt}/>
+    </PSection>
+    <PSection title={t("НАСТРОЙКИ")}>
+      <PToggle label={t("Сезонна ротация")} value={settings.seasonalRotation} onChange={v=>saveSettings({seasonalRotation:v})}/>
+      <PToggle label={t("Сутрешно предложение")} value={settings.notifyMorningOutfit} onChange={v=>saveSettings({notifyMorningOutfit:v})}/>
+      <PToggle label={t("Седмичен отчет")} value={settings.notifyWeeklyReport} onChange={v=>saveSettings({notifyWeeklyReport:v})}/>
+      <PToggle label={t("Публичен гардероб")} value={profile.isPublic} onChange={v=>saveProfile({isPublic:v})}/>
       <div style={{padding:"12px 0",borderBottom:"1px solid "+T.border}}>
         <p style={{fontFamily:F.mono,fontSize:11,color:T.textDim,letterSpacing:"0.12em",marginBottom:8}}>{t("ЕЗИК")}</p>
         <div style={{display:"flex",gap:6}}>{[{id:"bg",label:"BG"},{id:"en",label:"EN"}].map(l=><Pill key={l.id} active={(settings.language||"bg")===l.id} onClick={()=>{saveSettings({language:l.id});toast("Language: "+l.label);}} small>{l.label}</Pill>)}</div>
       </div>
-    </Section>
-    <Section title={t("АКАУНТ")}>
+    </PSection>
+    <PSection title={t("АКАУНТ")}>
       <button onClick={()=>confirm(t("Искаш ли да излезеш от акаунта?"),()=>logout())} style={{width:"100%",padding:13,borderRadius:2,border:"1px solid "+T.border,background:"transparent",fontFamily:F.mono,fontSize:11,color:T.textMuted,cursor:"pointer",letterSpacing:"0.06em",marginBottom:8}}>{t("ИЗЛЕЗ")}</button>
       {!showDelete?<button onClick={()=>setShowDelete(true)} style={{width:"100%",padding:13,borderRadius:2,border:"1px solid "+T.danger,background:"transparent",fontFamily:F.mono,fontSize:11,color:T.dangerText,cursor:"pointer",letterSpacing:"0.06em"}}>{t("ИЗТРИЙ АКАУНТ")}</button>:
       <div style={{border:"1px solid "+T.danger,borderRadius:3,padding:16}}>
-        <p style={{fontFamily:F.sans,fontSize:12,color:T.dangerText,margin:"0 0 12px"}}>Това ще изтрие акаунта ти и всички данни завинаги.</p>
+        <p style={{fontFamily:F.sans,fontSize:12,color:T.dangerText,margin:"0 0 12px"}}>{t("Това ще изтрие акаунта ти и всички данни завинаги.")}</p>
         {!isGoogle&&<input value={delPass} onChange={e=>setDelPass(e.target.value)} type="password" placeholder={t("Въведи парола за потвърждение")} style={{...inputSt,marginBottom:10}}/>}
         <div style={{display:"flex",gap:8}}><button onClick={()=>{setShowDelete(false);setDelPass("");}} style={{flex:1,padding:12,borderRadius:2,border:"1px solid "+T.border,background:"transparent",fontFamily:F.mono,fontSize:11,color:T.textMuted,cursor:"pointer"}}>{t("ОТКАЗ")}</button>
         <button onClick={handleDelete} disabled={!isGoogle&&!delPass} style={{flex:1,padding:12,borderRadius:2,border:"none",background:T.dangerText,color:"#fff",fontFamily:F.mono,fontSize:11,cursor:"pointer",opacity:busy?0.5:1}}>{t("ИЗТРИЙ")}</button></div>
       </div>}
-    </Section>
+    </PSection>
     <div style={{textAlign:"center",marginTop:28}}>
       <p style={{fontFamily:F.mono,fontSize:9,color:T.textDim,letterSpacing:"0.16em",marginBottom:10}}>{t("ПРАВНА ИНФОРМАЦИЯ")}</p>
       <div style={{display:"flex",justifyContent:"center",gap:16}}>
@@ -954,15 +998,19 @@ export default function App(){
       if(cm){if(cm.calendar)setCalendar(cm.calendar);if(cm.blacklist)setBlacklist(cm.blacklist);}
       if(settings.theme)setTheme(settings.theme);
       if(settings.seasonalRotation!==undefined)setHideSeasonal(settings.seasonalRotation);
-      // Migrate localStorage
+      // Migrate localStorage — only clear after Firestore confirms
       const localItems=sGet("d6-items");
       if(localItems&&localItems.length>0&&(!ci||ci.length===0)){
-        setItems(localItems);syncItems(localItems);
-        const lo=sGet("d6-outfits");if(lo){setSaved(lo);syncOutfits(lo);}
+        setItems(localItems);
+        const lo=sGet("d6-outfits");if(lo)setSaved(lo);
         const lc=sGet("d6-calendar"),lb=sGet("d6-blacklist");
-        if(lc||lb)syncMeta({calendar:lc||{},blacklist:lb||[]});
         if(lc)setCalendar(lc);if(lb)setBlacklist(lb);
-        ["d6-items","d6-outfits","d6-calendar","d6-blacklist","d6-onboarded","d6-theme","d6-seasonal"].forEach(k=>localStorage.removeItem(k));
+        try{
+          await syncItems(localItems);
+          if(lo)await syncOutfits(lo);
+          if(lc||lb)await syncMeta({calendar:lc||{},blacklist:lb||[]});
+          ["d6-items","d6-outfits","d6-calendar","d6-blacklist","d6-onboarded","d6-theme","d6-seasonal"].forEach(k=>localStorage.removeItem(k));
+        }catch(e){console.warn("Migration sync failed, keeping localStorage:",e);}
       }
     }else{
       const i=sGet("d6-items"),o=sGet("d6-outfits"),th=sGet("d6-theme"),cal=sGet("d6-calendar"),bl=sGet("d6-blacklist"),hs=sGet("d6-seasonal");
@@ -971,22 +1019,25 @@ export default function App(){
     setLoaded(true);
   })();},[authLoading,user]);
 
-  // Separate debounced sync timers
+  // Separate debounced sync timers + flush for critical ops
   const dsync=(key,fn)=>{if(syncTimers.current[key])clearTimeout(syncTimers.current[key]);syncTimers.current[key]=setTimeout(fn,2000);};
+  const flushSync=useCallback(async(key,fn)=>{if(syncTimers.current[key])clearTimeout(syncTimers.current[key]);try{await fn();}catch(e){console.warn("Sync "+key+":",e);}},[]);
   useEffect(()=>{if(!loaded)return;if(user)dsync("items",()=>syncItems(items));else sSet("d6-items",items);},[items,loaded]);
   useEffect(()=>{if(!loaded)return;if(user)dsync("outfits",()=>syncOutfits(saved));else sSet("d6-outfits",saved);},[saved,loaded]);
   useEffect(()=>{if(!loaded)return;if(user)dsync("meta",()=>syncMeta({calendar,blacklist}));else{sSet("d6-calendar",calendar);sSet("d6-blacklist",blacklist);};},[calendar,blacklist,loaded]);
+  // Flush all pending syncs before page unload
+  useEffect(()=>{const handleUnload=()=>{Object.values(syncTimers.current).forEach(t=>clearTimeout(t));if(user){try{navigator.sendBeacon||syncItems(items);}catch(e){}}};window.addEventListener("beforeunload",handleUnload);window.addEventListener("pagehide",handleUnload);return()=>{window.removeEventListener("beforeunload",handleUnload);window.removeEventListener("pagehide",handleUnload);};},[user,items,saved,calendar,blacklist]);
   useEffect(()=>{if(!loaded)return;if(!user)sSet("d6-seasonal",hideSeasonal);},[hideSeasonal,loaded]);
 
   useEffect(()=>{window.scrollTo({top:0,behavior:"smooth"});},[tab]);
   const toggleTheme=()=>{const next=theme==="dark"?"light":"dark";setTheme(next);if(user)saveSettings({theme:next});else sSet("d6-theme",next);};
-  const add=(item)=>{setItems(p=>[item,...p]);setTab("wardrobe");};
-  const del=(id)=>{if(user&&deleteItemImage)deleteItemImage(id).catch(()=>{});setItems(p=>p.filter(i=>i.id!==id));};
+  const add=(item)=>{setItems(p=>{const next=[item,...p];if(user)flushSync("items",()=>syncItems(next));return next;});setTab("wardrobe");};
+  const del=(id)=>{if(user&&deleteItemImage)deleteItemImage(id).catch(()=>{});setItems(p=>{const next=p.filter(i=>i.id!==id);if(user)flushSync("items",()=>syncItems(next));return next;});};
   const update=(id,upd)=>{if(id==="__duplicate__"){setItems(p=>[upd,...p]);return;}setItems(p=>p.map(i=>{if(i.id!==id)return i;const u={...i,...upd};if(upd.lastWorn)u.wearsSinceWash=(i.wearsSinceWash||0)+1;if(upd.inLaundry===false&&i.inLaundry)u.wearsSinceWash=0;return u;}));if(upd.lastWorn){const dk=todayKey();setCalendar(prev=>{const e=normCal(prev[dk]);if(!e.worn.includes(id))return{...prev,[dk]:{...e,worn:[...e.worn,id]}};return prev;});}};
-  const saveO=(o)=>setSaved(p=>[o,...p]);const delO=(id)=>setSaved(p=>p.filter(o=>o.id!==id));
+  const saveO=(o)=>setSaved(p=>{const next=[o,...p];if(user)flushSync("outfits",()=>syncOutfits(next));return next;});const delO=(id)=>setSaved(p=>{const next=p.filter(o=>o.id!==id);if(user)flushSync("outfits",()=>syncOutfits(next));return next;});
   const addBlacklist=(key)=>setBlacklist(p=>[...p,key]);
   const T=THEMES[theme]||THEMES.dark;
-  const globalStyles=`@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Syne:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap');@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}::-webkit-scrollbar{display:none}html{height:-webkit-fill-available}body{background:${T.bg};margin:0;min-height:100dvh;padding:env(safe-area-inset-top,0) env(safe-area-inset-right,0) env(safe-area-inset-bottom,0) env(safe-area-inset-left,0);transition:background 0.3s;overscroll-behavior-y:none}@supports not (min-height:100dvh){body{min-height:100vh;min-height:-webkit-fill-available}}input,select,button,textarea{outline:none}input:focus,textarea:focus{border-color:${T.textDim} !important}::placeholder{color:${T.textDim}}button:active{opacity:0.7}video{-webkit-transform:translateZ(0)}`;
+  const globalStyles=`@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Syne:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap');@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}::-webkit-scrollbar{display:none}html{height:-webkit-fill-available}body{background:${T.bg};margin:0;min-height:100dvh;padding:env(safe-area-inset-top,0) env(safe-area-inset-right,0) env(safe-area-inset-bottom,0) env(safe-area-inset-left,0);transition:background 0.3s;overscroll-behavior-y:none}@supports not (min-height:100dvh){body{min-height:100vh;min-height:-webkit-fill-available}}input,select,button,textarea{outline:none}input:focus,textarea:focus{border-color:${T.textDim} !important}::placeholder{color:${T.textDim}}button:active{opacity:0.7}video{-webkit-transform:translateZ(0)}`;
 
   if(authLoading||!loaded)return(<ThemeCtx.Provider value={T}><div style={{height:"100dvh",display:"flex",alignItems:"center",justifyContent:"center",background:T.bg}}><style>{globalStyles}</style><Logo size={28} animate/></div></ThemeCtx.Provider>);
   if(!user)return(<ThemeCtx.Provider value={T}><style>{globalStyles}</style><ToastProvider><ConfirmProvider><AuthScreen/></ConfirmProvider></ToastProvider></ThemeCtx.Provider>);

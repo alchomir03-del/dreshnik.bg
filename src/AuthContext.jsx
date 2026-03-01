@@ -131,8 +131,10 @@ export function AuthProvider({ children }) {
         settings: settingsRef.current,
         updatedAt: new Date().toISOString(),
       }, { merge: true });
+      return true;
     } catch (e) {
       console.warn("Save profile:", e);
+      return false;
     }
   }, [user]);
 
@@ -149,8 +151,10 @@ export function AuthProvider({ children }) {
         settings: merged,
         updatedAt: new Date().toISOString(),
       }, { merge: true });
+      return true;
     } catch (e) {
       console.warn("Save settings:", e);
+      return false;
     }
   }, [user]);
 
@@ -312,13 +316,13 @@ export function AuthProvider({ children }) {
   const syncItems = useCallback(async (items) => {
     if (!user) return;
     try {
-      // Save all items as single doc for simplicity
       await setDoc(doc(db, "users", user.uid, "data", "wardrobe"), {
         items,
         updatedAt: new Date().toISOString(),
       });
     } catch (e) {
       console.warn("Sync items:", e);
+      throw e;
     }
   }, [user]);
 
@@ -344,6 +348,7 @@ export function AuthProvider({ children }) {
       });
     } catch (e) {
       console.warn("Sync outfits:", e);
+      throw e;
     }
   }, [user]);
 
@@ -369,6 +374,7 @@ export function AuthProvider({ children }) {
       });
     } catch (e) {
       console.warn("Sync meta:", e);
+      throw e;
     }
   }, [user]);
 
